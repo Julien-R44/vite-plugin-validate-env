@@ -14,7 +14,12 @@
   "bugs": {
     "url": "https://github.com/Julien-R44/vite-plugin-validate-env/issues"
   },
-  "keywords": [],
+  "keywords": [
+    "vite",
+    "vite-plugin",
+    "env-var",
+    "validation"
+  ],
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
