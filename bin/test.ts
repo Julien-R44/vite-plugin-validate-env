@@ -1,4 +1,3 @@
-import { pathToFileURL } from 'node:url'
 import { assert } from '@japa/assert'
 import { specReporter } from '@japa/spec-reporter'
 import { configure, processCliArgs, run } from '@japa/runner'
