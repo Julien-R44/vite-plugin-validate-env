@@ -11,7 +11,7 @@ import type { SchemaFnOptions } from '../contracts'
  * - "1", 1, "true", true will be casted to true
  * - string representation of a number will be casted to a number
  */
-function ensureOneOf(choices: any[], key: string, value: any, message?: string) {
+function ensureOneOf<T>(choices: readonly T[], key: string, value: any, message?: string): T {
   if (BOOLEAN_NEGATIVES.includes(value)) {
     value = false
   } else if (BOOLEAN_POSITIVES.includes(value)) {
@@ -46,7 +46,7 @@ function ensureOneOf(choices: any[], key: string, value: any, message?: string) 
 /**
  * Enforces value to be one of the defined choices
  */
-export function oneOf(choices: any[], options?: SchemaFnOptions) {
+export function oneOf<T>(choices: readonly T[], options?: SchemaFnOptions) {
   return function validate(key: string, value?: string) {
     ensureValue(key, value, options?.message)
     return ensureOneOf(choices, key, value, options?.message)
@@ -56,7 +56,7 @@ export function oneOf(choices: any[], options?: SchemaFnOptions) {
 /**
  * Similar to oneOf, but also allows optional properties
  */
-oneOf.optional = function optionalBoolean(choices: any[], options?: SchemaFnOptions) {
+oneOf.optional = function optionalOneOf<T>(choices: readonly T[], options?: SchemaFnOptions) {
   return function validate(key: string, value?: string) {
     if (!value) {
       return undefined
