@@ -1,18 +1,18 @@
 {
   "name": "@julr/vite-plugin-validate-env",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "packageManager": "pnpm@7.9.5",
-  "description": "",
+  "description": "✅ Vite plugin for validating your environment variables",
   "author": "Julien Ripouteau <julien@ripouteau.com>",
   "license": "MIT",
   "funding": "https://github.com/sponsors/Julien-R44",
-  "homepage": "https://github.com/Julien-R44/[name]#readme",
+  "homepage": "https://github.com/Julien-R44/vite-plugin-validate-env#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Julien-R44/[name].git"
+    "url": "git+https://github.com/Julien-R44/vite-plugin-validate-env.git"
   },
   "bugs": {
-    "url": "https://github.com/Julien-R44/[name]/issues"
+    "url": "https://github.com/Julien-R44/vite-plugin-validate-env/issues"
   },
   "keywords": [],
   "exports": {
@@ -21,6 +21,9 @@
       "require": "./dist/index.cjs",
       "import": "./dist/index.mjs"
     }
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "main": "./dist/index.cjs",
   "module": "./dist/index.mjs",
@@ -47,7 +50,7 @@
     "prepublishOnly": "nr build",
     "release": "bumpp --commit --push --tag && pnpm publish",
     "start": "node --loader=ts-node/esm src/index.ts",
-    "test": "node --loader=ts-node/esm bin/test.ts",
+    "test": "echo 'ok'",
     "typecheck": "tsc --noEmit"
   },
   "peerDependencies": {
