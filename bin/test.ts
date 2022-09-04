@@ -22,7 +22,7 @@ configure({
     files: ['tests/**/*.spec.ts'],
     plugins: [assert()],
     reporters: [specReporter()],
-    importer: (filePath) => import(pathToFileURL(filePath).href),
+    importer: (filePath) => import(filePath),
   },
 })
 

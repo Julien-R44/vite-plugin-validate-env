@@ -55,7 +55,8 @@
     "prepublishOnly": "nr build",
     "release": "bumpp --commit --push --tag && pnpm publish",
     "start": "node --loader=ts-node/esm src/index.ts",
-    "test": "echo 'ok'",
+    "test": "ts-node bin/test.ts",
+    "test:watch": "nodemon --ignore ./tests/fixtures bin/test.ts",
     "typecheck": "tsc --noEmit"
   },
   "peerDependencies": {
@@ -70,10 +71,12 @@
     "@japa/runner": "^2.0.9",
     "@japa/spec-reporter": "^1.1.12",
     "@julr/eslint-config": "^0.3.2",
+    "@poppinss/dev-utils": "^2.0.3",
     "@types/node": "^18.7.14",
     "@types/validator": "^13.7.6",
     "bumpp": "^8.2.1",
     "eslint": "^8.23.0",
+    "nodemon": "^2.0.19",
     "pnpm": "^7.9.5",
     "prettier": "^2.7.1",
     "rimraf": "^3.0.2",
