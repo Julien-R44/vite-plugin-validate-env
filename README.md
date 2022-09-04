@@ -107,7 +107,7 @@ type Env = { [K in keyof EnvSchema]: ReturnType<EnvSchema[K]> }
 
 interface ImportMetaEnv extends Env {
   // Now import.meta.env is totally type-safe and based on your `env.ts` schema definition
-  // Here you can always add custom things that are not in your schema ?
+  // Here you can also add custom variables that are not defined in your schema
 }
 ```
 
