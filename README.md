@@ -22,7 +22,7 @@ export default defineConfig({
       VITE_STRING_VARIABLE: Schema.string(),
       VITE_BOOLEAN_VARIABLE: Schema.boolean(),
       VITE_NUMBER_VARIABLE: Schema.number(),
-      VITE_ENUM_VARIABLE: Schema.enum(['foo', 'bar']),
+      VITE_ENUM_VARIABLE: Schema.enum(['foo', 'bar'] as const),
       
       // Optional variable
       VITE_OPTIONAL_VARIABLE: Schema.boolean.optional(),
@@ -42,10 +42,66 @@ export default defineConfig({
         if (value.endsWith('foo')) {
           throw new Error('Value cannot end with "foo"')
         }
+
+        return value
       },
     }),
   ],
 })
+```
+
+## Dedicated config file
+
+You can also add a `env.ts` file at the root of your project to define your environment variables.
+
+```ts
+// vite.config.ts
+export default defineConfig({
+  plugins: [ValidateEnv()],
+})
+```
+
+```ts
+// env.ts
+export default {
+ VITE_MY_VAR: Schema.enum(['foo', 'bar'] as const),
+}
+```
+
+## Parsing
+In addition to the validation of your variables, there is also a parsing that is done. This means that you can modify the value of an environment variable before it is injected. 
+
+Let's imagine the following case: you want to expose a variable `VITE_AUTH_API_URL` in order to use it to call an API. However, you absolutely need a trailing slash at the end of this environment variable. Here's how it can be done :
+
+```ts
+export default {
+  VITE_AUTH_API_URL: (key, value) => {
+    if (!value) {
+      throw new Error(`Missing ${key} env variable`)
+    }
+
+    if (!value.endsWith('/')) {
+      return `${value}/`
+    }
+
+    return value
+  },
+}
+```
+
+Now, in your client front-end code, when you call `import.meta.env.VITE_AUTH_API_URL`, you can be sure that it will always end with a slash.
+
+## Typing `import.meta.env`
+In order to have a type-safe `import.meta.env`, the ideal is to use the dedicated configuration file `env.ts`.
+Once this is done, you would only need to add an `env.d.ts` to augment `ImportMetaEnv` (as [suggested here](https://vitejs.dev/guide/env-and-mode.html#env-files) ) with the following content:
+
+```ts
+type EnvSchema = typeof import('../env').default
+type Env = { [K in keyof EnvSchema]: ReturnType<EnvSchema[K]> }
+
+interface ImportMetaEnv extends Env {
+  // Here you can always add custom things that are not in your schema ?
+}
 ```
 
 ## License
