@@ -4,6 +4,12 @@ This Vite plugin allows you to validate your environment variables at build or d
 
 No more CI to restart because you are missing an environment variable, or to realize after 10 minutes of debugging that you forgot a variable 🥲
 
+## Features
+- Validate your environment variables at build time. No runtime overhead
+- Totally type-safe
+- Parsing and validation
+- Custom rules and error messages
+
 ## Installation
 
 ```sh
