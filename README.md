@@ -1,4 +1,6 @@
-# vite-plugin-validate-env
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/8337858/188329992-e74b3393-5bec-48b3-bba9-a8c45d279866.png">
+</p>
 
 This Vite plugin allows you to validate your environment variables at build or dev time. This allows your build/dev-server to [fail-fast](https://en.wikipedia.org/wiki/Fail-fast) if your setup is misconfigured.
 
