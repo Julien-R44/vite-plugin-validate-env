@@ -2,7 +2,7 @@
 
 This Vite plugin allows you to validate your environment variables at build or dev time. This allows your build/dev-server to [fail-fast](https://en.wikipedia.org/wiki/Fail-fast) if your setup is misconfigured.
 
-No more CI to restart because you are missing an environment variable, or or to realize after 10 minutes of debugging bug that you forgot a variable 🥲
+No more CI to restart because you are missing an environment variable, or to realize after 10 minutes of debugging that you forgot a variable 🥲
 
 ## Installation
 
