@@ -9,7 +9,8 @@ No more CI to restart because you are missing an environment variable, or to rea
 ## Features
 - Validate your environment variables at build time. No runtime overhead
 - Totally type-safe
-- Parsing and validation
+- Support multiple validation librairies ( [Zod](https://zod.dev/), and built-in for now )
+- Parsing, validation, transformation
 - Custom rules and error messages
 
 ## Installation
@@ -19,9 +20,40 @@ pnpm add -D @julr/vite-plugin-validate-env
 ```
 
 ## Usage
+`vite-plugin-validate-env` plugin allows you to validate your env, either with a very simplified builtin validation lib, or with Zod in the most complex cases when you want a very strict validation.
+
+### Plugin options 
+The easiest way to define the options is to directly define the scheme as follows: 
+```ts
+import { defineConfig } from '@julr/vite-plugin-validate-env'
+
+export default defineConfig({
+  plugins: [
+    ValidateEnv({
+      VITE_MY_VAR: Schema.string()
+    }),
+  ],
+})
+```
+
+In case you want to change some plugin options, in particular change the validator (for Zod), you have to set your options as follows: 
+```ts
+export default defineConfig({
+  plugins: [
+    ValidateEnv({
+      validator: 'zod',
+      schema: {
+        VITE_MY_VAR: z.string()
+      }
+    }),
+  ],
+})
+```
+
+### Built-in validator
 
 ```ts
-import { Schema, ValidateEnv } from '@julr/vite-plugin-validate-env'
+import { Schema, ValidateEnv, defineConfig } from '@julr/vite-plugin-validate-env'
 
 export default defineConfig({
   plugins: [
@@ -58,6 +90,41 @@ export default defineConfig({
 })
 ```
 
+### Zod Validator
+To use the Zod validator, you must first install it if you have not already done so
+```
+pnpm install zod
+```
+
+Then, you can use it as follows: 
+```ts
+// env.ts
+export default defineConfig({
+  validator: 'zod',
+  schema: {
+    VITE_MY_STRING: z.string().min(5, 'This is too short !'),
+    VITE_ENUM: z.enum(['a', 'b', 'c']),
+    VITE_BOOLEAN_VARIABLE: z.boolean(),
+  }
+})
+```
+
+Beware, there are some limitations if you use Zod. For example, you can't use a boolean or number type directly. Because everything that comes from your `.env` file is a string by default.
+
+So to validate a boolean you must use `preprocess`, and `transform`, like this:
+```ts
+// env.ts
+export default defineConfig({
+  validator: 'zod',
+  schema: {
+    VITE_BOOLEAN_VARIABLE: z
+      .preprocess((value) => value === 'true' || value === '1', z.boolean())
+  }
+})
+```
+
+In this case, `true` and `1` will be transformed to `true` and your variable will be valid and considered as a boolean. 
+
 ## Dedicated config file
 
 You can also add a `env.ts` file at the root of your project to define your environment variables.
@@ -71,18 +138,19 @@ export default defineConfig({
 
 ```ts
 // env.ts
-export default {
+export default defineConfig({
  VITE_MY_VAR: Schema.enum(['foo', 'bar'] as const),
-}
+})
 ```
 
-## Parsing
+## Transforming variables
 In addition to the validation of your variables, there is also a parsing that is done. This means that you can modify the value of an environment variable before it is injected. 
 
 Let's imagine the following case: you want to expose a variable `VITE_AUTH_API_URL` in order to use it to call an API. However, you absolutely need a trailing slash at the end of this environment variable. Here's how it can be done :
 
 ```ts
-export default {
+// Built-in validation
+export default defineConfig({
   VITE_AUTH_API_URL: (key, value) => {
     if (!value) {
       throw new Error(`Missing ${key} env variable`)
@@ -94,23 +162,39 @@ export default {
 
     return value
   },
-}
+})
+```
+
+```ts
+// Zod validation
+export default defineConfig({
+  validator: 'zod',
+  schema: {
+    VITE_AUTH_API_URL: z
+      .string()
+      .transform((value) => value.endsWith('/') ? value : `${value}/`),
+  },
+})
 ```
 
 Now, in your client front-end code, when you call `import.meta.env.VITE_AUTH_API_URL`, you can be sure that it will always end with a slash.
 
 ## Typing `import.meta.env`
 In order to have a type-safe `import.meta.env`, the ideal is to use the dedicated configuration file `env.ts`.
-Once this is done, you would only need to add an `env.d.ts` to augment `ImportMetaEnv` (as [suggested here](https://vitejs.dev/guide/env-and-mode.html#env-files) ) with the following content:
+Once this is done, you would only need to add an `env.d.ts` in `src/` folder to augment `ImportMetaEnv` (as [suggested here](https://vitejs.dev/guide/env-and-mode.html#env-files) ) with the following content:
 
 ```ts
-type EnvSchema = typeof import('../env').default
-type Env = { [K in keyof EnvSchema]: ReturnType<EnvSchema[K]> }
+/// <reference types="vite/client" />
 
-interface ImportMetaEnv extends Env {
+type ImportMetaEnvAugmented = import('@julr/vite-plugin-validate-env').ImportMetaEnvAugmented<
+  typeof import('../env').default
+>
+
+interface ImportMetaEnv extends ImportMetaEnvAugmented {
   // Now import.meta.env is totally type-safe and based on your `env.ts` schema definition
-  // Here you can also add custom variables that are not defined in your schema
+  // You can also add custom variables that are not defined in your schema
 }
+
 ```
 
 ## License
