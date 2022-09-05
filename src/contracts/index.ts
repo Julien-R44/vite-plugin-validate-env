@@ -1,9 +1,5 @@
 import type { z } from 'zod'
-
-/**
- * The shape of the validate fn
- */
-export type ValidateFn<T> = (key: string, value?: string) => T
+import type { ValidateFn } from '@poppinss/validator-lite'
 
 /**
  * Schema defined by the user
@@ -31,37 +27,6 @@ export type PoppinsSchema = RecordViteKeys<ValidateFn<any>>
 export type ZodSchema = RecordViteKeys<z.ZodType<any, any>>
 
 export type Schema = PoppinsSchema | ZodSchema
-
-/**
- * A standard set of options accepted by the schema validation
- * functions
- */
-export interface SchemaFnOptions {
-  message?: string
-}
-
-export type StringFnUrlOptions = SchemaFnOptions & {
-  format: 'url'
-  /**
-   * Whether the URL must have a valid TLD in their domain.
-   * Defaults to `true`.
-   */
-  tld?: boolean
-  /**
-   * Whether the URL must start with a valid protocol.
-   * Defaults to `true`.
-   */
-  protocol?: boolean
-}
-
-/**
- * Options accepted by the string schema function
- */
-export type StringFnOptions =
-  | (SchemaFnOptions & {
-      format?: 'host' | 'email'
-    })
-  | StringFnUrlOptions
 
 /**
  * Infer the schema type from the plugin options

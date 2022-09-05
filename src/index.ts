@@ -48,7 +48,7 @@ async function zodValidation(env: Record<string, string>, schema: ZodSchema) {
 
     if (!result.success) {
       throw new Exception(
-        `Invalid value for "${key}" : ${result.error.issues[0].message}`,
+        `E_INVALID_ENV_VALUE: Invalid value for "${key}" : ${result.error.issues[0].message}`,
         'E_INVALID_ENV_VALUE'
       )
     }
@@ -113,5 +113,5 @@ export const ValidateEnv = (options?: PluginOptions): Plugin => ({
 
 export const defineConfig = <T extends PluginOptions>(config: T): T => config
 
-export { Schema } from './schema/index'
+export { schema as Schema } from '@poppinss/validator-lite'
 export type { ImportMetaEnvAugmented } from './contracts'
