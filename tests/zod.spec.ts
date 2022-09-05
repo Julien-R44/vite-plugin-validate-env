@@ -54,22 +54,6 @@ test.group('Zod validation adaptater', () => {
     await assert.rejects(fn, 'Invalid value for "VITE_LONG_STRING" : Max 10 characters')
   })
 
-  test('Boolean value', async ({ assert }) => {
-    const plugin = ValidateEnv({
-      validator: 'zod',
-      schema: {
-        VITE_BOOLEAN: z.preprocess((value) => value === 'true', z.boolean()),
-      },
-    })
-
-    await fs.add(`.env.development`, `VITE_BOOLEAN=true`)
-
-    await plugin.config!(viteConfig, viteEnvConfig)
-
-    // console.log(process.env.VITE_BOOLEAN)
-    // assert.deepEqual(process.env.VITE_BOOLEAN, true)
-  }).skip()
-
   test('Refine value', async ({ assert }) => {
     const plugin = ValidateEnv({
       validator: 'zod',

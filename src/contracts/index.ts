@@ -1,5 +1,4 @@
 import type { z } from 'zod'
-import type { Schema } from '../schema'
 
 /**
  * The shape of the validate fn
