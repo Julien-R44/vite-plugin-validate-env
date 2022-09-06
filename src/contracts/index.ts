@@ -8,7 +8,7 @@ export type ValidateFn<T> = (key: string, value?: string) => T
 /**
  * Schema defined by the user
  */
-export type RecordViteKeys<T> = Record<`VITE_${string}`, T>
+export type RecordViteKeys<T> = Record<`${string}_${string}`, T>
 
 /**
  * Options that can be passed to the plugin
