@@ -3,7 +3,7 @@ lockfileVersion: 5.4
 specifiers:
   '@antfu/ni': ^0.18.0
   '@japa/assert': ^1.3.5
-  '@japa/runner': ^2.1.1
+  '@japa/runner': ^2.1.2
   '@japa/spec-reporter': ^1.2.0
   '@julr/eslint-config': ^0.3.2
   '@poppinss/dev-utils': ^2.0.3
@@ -13,26 +13,26 @@ specifiers:
   bumpp: ^8.2.1
   eslint: ^8.23.0
   nodemon: ^2.0.19
-  pnpm: ^7.10.0
+  pnpm: ^7.11.0
   prettier: ^2.7.1
   rimraf: ^3.0.2
   ts-node: ^10.9.1
   typescript: ^4.8.2
   unbuild: ^0.8.10
-  unconfig: ^0.3.5
+  unconfig: ^0.3.6
   validator: ^13.7.0
-  vite: ^3.0.9
-  zod: ^3.18.0
+  vite: ^3.1.0
+  zod: ^3.19.0
 
 dependencies:
   '@poppinss/validator-lite': 1.0.1
-  unconfig: 0.3.5
+  unconfig: 0.3.6
   validator: 13.7.0
 
 devDependencies:
   '@antfu/ni': 0.18.0
-  '@japa/assert': 1.3.5_@japa+runner@2.1.1
-  '@japa/runner': 2.1.1
+  '@japa/assert': 1.3.5_@japa+runner@2.1.2
+  '@japa/runner': 2.1.2
   '@japa/spec-reporter': 1.2.0
   '@julr/eslint-config': 0.3.2_er5sflmxjcrgfvrsp3qwdvxste
   '@poppinss/dev-utils': 2.0.3
@@ -41,14 +41,14 @@ devDependencies:
   bumpp: 8.2.1
   eslint: 8.23.0
   nodemon: 2.0.19
-  pnpm: 7.10.0
+  pnpm: 7.11.0
   prettier: 2.7.1
   rimraf: 3.0.2
   ts-node: 10.9.1_r4hqq7vrw4pxsipnb7ha25ylfe
   typescript: 4.8.2
   unbuild: 0.8.10
-  vite: 3.0.9
-  zod: 3.18.0
+  vite: 3.1.0
+  zod: 3.19.0
 
 packages:
 
@@ -419,12 +419,12 @@ packages:
     resolution: {integrity: sha512-ZnQMnLV4e7hDlUvw8H+U8ASL02SS2Gn6+9Ac3wGGLIe7+je2AeAOxPY+izIPJDfFDb7eDjev0Us8MO1iFRN8hA==}
     dev: true
 
-  /@japa/assert/1.3.5_@japa+runner@2.1.1:
+  /@japa/assert/1.3.5_@japa+runner@2.1.2:
     resolution: {integrity: sha512-Kw7+cuovc1jFdiMo2K2Cf7MlaH1PL/VHwvSmJ/24cEyZvACUm4l6XU8vua88CPHMdFsib8qIwTmqf0dSPFaH1A==}
     peerDependencies:
       '@japa/runner': ^2.1.1
     dependencies:
-      '@japa/runner': 2.1.1
+      '@japa/runner': 2.1.2
       '@types/chai': 4.3.3
       api-contract-validator: 2.2.8
       chai: 4.3.6
@@ -433,8 +433,8 @@ packages:
       - openapi-types
     dev: true
 
-  /@japa/core/7.0.0:
-    resolution: {integrity: sha512-YDU8MHiq4PiVIRuSC4tK29wRFKdqjZ1HrpZc/1ILjzGdMPuZAIZE4f22NVmCaIYGlhM18X8n3oz8cpb2cTu+fg==}
+  /@japa/core/7.0.1:
+    resolution: {integrity: sha512-bjNZaWswwxh1w2vEc1uQPNtKkVyxVzQT8ucQMJ6dZi5UkpC52Z8rqo1+mWAS95ThV0t/DajSnFgS77/TaSIIEQ==}
     dependencies:
       '@poppinss/hooks': 6.0.2-0
       async-retry: 1.3.3
@@ -452,11 +452,20 @@ packages:
       youch-terminal: 2.1.5
     dev: true
 
-  /@japa/runner/2.1.1:
-    resolution: {integrity: sha512-Ao/DBT+UTqXsMHHUpOI24V3P6cOXZQmF02oyYpPJ9HMZPX3c7C1MMo5mzdBBCE4g1oXBDFLkGUnXkPT4rIjs/g==}
+  /@japa/errors-printer/2.0.0:
+    resolution: {integrity: sha512-27+z+PrcG3wUPmY3MRL01H79V/QFBzgkeMk6Y8ywOgZDnI64ZiBzWPGDpMhzfrah5OI3nBHVp8MO+x+D5Aghjw==}
     dependencies:
-      '@japa/core': 7.0.0
-      '@japa/errors-printer': 1.3.10
+      '@poppinss/cliui': 3.0.2
+      jest-diff: 29.0.2
+      youch: 3.2.1
+      youch-terminal: 2.1.5
+    dev: true
+
+  /@japa/runner/2.1.2:
+    resolution: {integrity: sha512-rA1ZbM/kwarVHfUeK8gfHmuouI2jst3BiaOHnkr7cPeFRRcFtpfQm3T+SasEXKLZa1aUlhY9mXF0aFlCn5qHlw==}
+    dependencies:
+      '@japa/core': 7.0.1
+      '@japa/errors-printer': 2.0.0
       '@poppinss/cliui': 3.0.2
       '@poppinss/hooks': 6.0.2-0
       fast-glob: 3.2.11
@@ -4260,8 +4269,8 @@ packages:
     resolution: {integrity: sha512-Nc3IT5yHzflTfbjgqWcCPpo7DaKy4FnpB0l/zCAW0Tc7jxAiuqSxHasntB3D7887LSrA93kDJ9IXovxJYxyLCA==}
     engines: {node: '>=4'}
 
-  /pnpm/7.10.0:
-    resolution: {integrity: sha512-DGjcJ3OAHRtyqZJek6OzqLir7hqNaayX4FxMKSXlnpgQRVZsU2jtym/FlR1PS4VmSy+p1Ps/aPz62iHNG0eReQ==}
+  /pnpm/7.11.0:
+    resolution: {integrity: sha512-cxh4TfCE8L4ZbLBN72kTGKTYP7X08nrIzoQ2rQCKihAcIHAdNIgsk4bEJyE1xHjE+bNJt9skwr7aJv3LpvUawQ==}
     engines: {node: '>=14.6'}
     hasBin: true
     dev: true
@@ -4507,8 +4516,8 @@ packages:
       - supports-color
     dev: true
 
-  /rollup/2.77.3:
-    resolution: {integrity: sha512-/qxNTG7FbmefJWoeeYJFbHehJ2HNWnjkAFRKzWN/45eNBBF/r8lo992CwcJXEzyVxs5FmfId+vTSTQDb+bxA+g==}
+  /rollup/2.78.1:
+    resolution: {integrity: sha512-VeeCgtGi4P+o9hIg+xz4qQpRl6R401LWEXBmxYKOV4zlF82lyhgh2hTZnheFUbANE8l2A41F458iwj2vEYaXJg==}
     engines: {node: '>=10.0.0'}
     hasBin: true
     optionalDependencies:
@@ -4981,8 +4990,8 @@ packages:
       - supports-color
     dev: true
 
-  /unconfig/0.3.5:
-    resolution: {integrity: sha512-YMnPPUSfW0pT4Zzy4inM8tRHJZmhH+KcuFW/3qxkLKPhswEw18gQYe1jt57jY6ctFB0fnpiCpQ2Jtkbg4y/IPA==}
+  /unconfig/0.3.6:
+    resolution: {integrity: sha512-JWefWyjLrDAbzs30sFkzcE9YpvAhN9+UPMZBwnNUmaY9X7QhI+wCGP4hoEWfZDzvkP+WIaZDPcMUJjarpxFvKg==}
     dependencies:
       '@antfu/utils': 0.5.2
       defu: 6.1.0
@@ -5054,8 +5063,8 @@ packages:
     resolution: {integrity: sha512-nYXQLCBkpJ8X6ltALua9dRrZDHVYxjJ1wgskNt1lH9fzGjs3tgojGSCBjmEPwkWS1y29+DrizMTW19Pr9uB2nw==}
     engines: {node: '>= 0.10'}
 
-  /vite/3.0.9:
-    resolution: {integrity: sha512-waYABTM+G6DBTCpYAxvevpG50UOlZuynR0ckTK5PawNVt7ebX6X7wNXHaGIO6wYYFXSM7/WcuFuO2QzhBB6aMw==}
+  /vite/3.1.0:
+    resolution: {integrity: sha512-YBg3dUicDpDWFCGttmvMbVyS9ydjntwEjwXRj2KBFwSB8SxmGcudo1yb8FW5+M/G86aS8x828ujnzUVdsLjs9g==}
     engines: {node: ^14.18.0 || >=16.0.0}
     hasBin: true
     peerDependencies:
@@ -5073,10 +5082,10 @@ packages:
       terser:
         optional: true
     dependencies:
-      esbuild: 0.14.54
+      esbuild: 0.15.6
       postcss: 8.4.16
       resolve: 1.22.1
-      rollup: 2.77.3
+      rollup: 2.78.1
     optionalDependencies:
       fsevents: 2.3.2
     dev: true
@@ -5200,6 +5209,6 @@ packages:
       commander: 2.20.3
     dev: true
 
-  /zod/3.18.0:
-    resolution: {integrity: sha512-gwTm8RfUCe8l9rDwN5r2A17DkAa8Ez4Yl4yXqc5VqeGaXaJahzYYXbTwvhroZi0SNBqTwh/bKm2N0mpCzuw4bA==}
+  /zod/3.19.0:
+    resolution: {integrity: sha512-Yw0qvUsCNGBe5YacikdMt5gVYeUuaEFVDIHKMfElrGSaBhwR3CQK6vOzgfAJOjTdGIhEeoaj8GtT+NDZrepZbw==}
     dev: true
