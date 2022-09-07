@@ -19,6 +19,7 @@ test.group('Zod validation adaptater', () => {
 
     await fs.add(`.env.development`, `VITE_TEST=htest`)
 
+    // @ts-expect-error - `config` is the handler
     const fn = plugin.config!.bind(plugin, viteConfig, viteEnvConfig)
     await assert.rejects(fn, 'E_INVALID_ENV_VALUE: Invalid value for "VITE_TEST" : Invalid url')
   })
@@ -36,6 +37,7 @@ test.group('Zod validation adaptater', () => {
 
     await fs.add(`.env.development`, `VITE_TEST=hello`)
 
+    // @ts-expect-error - `config` is the handler
     await plugin.config!(viteConfig, viteEnvConfig)
     assert.equal(process.env.VITE_TEST, 'HELLO')
   })
@@ -50,6 +52,7 @@ test.group('Zod validation adaptater', () => {
 
     await fs.add(`.env.development`, `VITE_LONG_STRING=superlongstring`)
 
+    // @ts-expect-error - `config` is the handler
     const fn = plugin.config!.bind(plugin, viteConfig, viteEnvConfig)
     await assert.rejects(
       fn,
@@ -69,6 +72,7 @@ test.group('Zod validation adaptater', () => {
 
     await fs.add(`.env.development`, `VITE_REFINED=superlongstring`)
 
+    // @ts-expect-error - `config` is the handler
     const fn = plugin.config!.bind(plugin, viteConfig, viteEnvConfig)
     await assert.rejects(
       fn,

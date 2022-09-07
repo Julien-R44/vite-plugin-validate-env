@@ -19,6 +19,7 @@ test.group('vite-plugin-validate-env', (group) => {
 
     await fs.add(`.env.development`, `VITE_TEST=not boolean`)
 
+    // @ts-expect-error - `config` is the handler
     const fn = plugin.config!.bind(plugin, viteConfig, viteEnvConfig)
     await assert.rejects(
       fn,
@@ -33,6 +34,7 @@ test.group('vite-plugin-validate-env', (group) => {
 
     await fs.add(`.env.development`, `VITE_TEST=not boolean`)
 
+    // @ts-expect-error - `config` is the handler
     const fn = plugin.config!.bind(plugin, viteConfig, viteEnvConfig)
     await assert.rejects(fn, 'E_INVALID_ENV_VALUE: Heyhey')
   })
@@ -48,6 +50,7 @@ test.group('vite-plugin-validate-env', (group) => {
 
     await fs.add(`.env.development`, `VITE_TEST=not valid`)
 
+    // @ts-expect-error - `config` is the handler
     const fn = plugin.config!.bind(plugin, viteConfig, viteEnvConfig)
     await assert.rejects(fn, 'Value must be "valid"')
   })
@@ -69,6 +72,7 @@ test.group('vite-plugin-validate-env', (group) => {
 
     await fs.add(`.env.development`, `VITE_URL_TRAILING=test.com`)
 
+    // @ts-expect-error - `config` is the handler
     await plugin.config!(viteConfig, viteEnvConfig)
     assert.equal(process.env.VITE_URL_TRAILING, 'test.com/')
   })
@@ -86,6 +90,7 @@ test.group('vite-plugin-validate-env', (group) => {
     }`
     )
 
+    // @ts-expect-error - `config` is the handler
     const fn = plugin.config!.bind(plugin, viteConfig, viteEnvConfig)
     await assert.rejects(fn, 'Error validating')
   })
@@ -95,6 +100,7 @@ test.group('vite-plugin-validate-env', (group) => {
 
     await fs.add(`.env.development`, `VITE_MY_VAR=true`)
 
+    // @ts-expect-error - `config` is the handler
     const fn = plugin.config!.bind(plugin, viteConfig, viteEnvConfig)
     await assert.rejects(fn, 'Missing configuration for vite-plugin-validate-env')
   })
