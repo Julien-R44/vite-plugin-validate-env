@@ -20,7 +20,7 @@ test.group('Zod validation adaptater', () => {
     await fs.add(`.env.development`, `VITE_TEST=htest`)
 
     const fn = plugin.config!.bind(plugin, viteConfig, viteEnvConfig)
-    await assert.rejects(fn, 'Invalid value for "VITE_TEST" : Invalid url')
+    await assert.rejects(fn, 'E_INVALID_ENV_VALUE: Invalid value for "VITE_TEST" : Invalid url')
   })
 
   test('Transform value', async ({ assert }) => {
@@ -51,7 +51,10 @@ test.group('Zod validation adaptater', () => {
     await fs.add(`.env.development`, `VITE_LONG_STRING=superlongstring`)
 
     const fn = plugin.config!.bind(plugin, viteConfig, viteEnvConfig)
-    await assert.rejects(fn, 'Invalid value for "VITE_LONG_STRING" : Max 10 characters')
+    await assert.rejects(
+      fn,
+      'E_INVALID_ENV_VALUE: Invalid value for "VITE_LONG_STRING" : Max 10 characters'
+    )
   })
 
   test('Refine value', async ({ assert }) => {
@@ -67,6 +70,9 @@ test.group('Zod validation adaptater', () => {
     await fs.add(`.env.development`, `VITE_REFINED=superlongstring`)
 
     const fn = plugin.config!.bind(plugin, viteConfig, viteEnvConfig)
-    await assert.rejects(fn, 'Invalid value for "VITE_REFINED" : Max 10 characters')
+    await assert.rejects(
+      fn,
+      'E_INVALID_ENV_VALUE: Invalid value for "VITE_REFINED" : Max 10 characters'
+    )
   })
 })

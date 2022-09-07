@@ -22,7 +22,7 @@ test.group('vite-plugin-validate-env', (group) => {
     const fn = plugin.config!.bind(plugin, viteConfig, viteEnvConfig)
     await assert.rejects(
       fn,
-      'Value for environment variable "VITE_TEST" must be a boolean, instead received "not boolean"'
+      'E_INVALID_ENV_VALUE: Value for environment variable "VITE_TEST" must be a boolean, instead received "not boolean"'
     )
   })
 
@@ -34,7 +34,7 @@ test.group('vite-plugin-validate-env', (group) => {
     await fs.add(`.env.development`, `VITE_TEST=not boolean`)
 
     const fn = plugin.config!.bind(plugin, viteConfig, viteEnvConfig)
-    await assert.rejects(fn, 'Heyhey')
+    await assert.rejects(fn, 'E_INVALID_ENV_VALUE: Heyhey')
   })
 
   test('Custom validator method', async ({ assert }) => {

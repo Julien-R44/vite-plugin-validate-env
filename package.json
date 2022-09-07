@@ -69,6 +69,7 @@
     }
   },
   "dependencies": {
+    "@poppinss/validator-lite": "^1.0.1",
     "unconfig": "^0.3.5",
     "validator": "^13.7.0"
   },
