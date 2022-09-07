@@ -9,7 +9,7 @@ No more CI to restart because you are missing an environment variable, or to rea
 ## Features
 - Validate your environment variables at build time. No runtime overhead
 - Totally type-safe
-- Support multiple validation librairies ( [Zod](https://zod.dev/), and built-in for now )
+- Support multiple validation librairies ( [Zod](https://zod.dev/), and [@poppinss/validator-lite](https://github.com/poppinss/validator-lite/) )
 - Parsing, validation, transformation
 - Custom rules and error messages
 
