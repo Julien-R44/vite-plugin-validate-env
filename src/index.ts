@@ -79,7 +79,7 @@ function getNormalizedOptions(options: PluginOptions) {
  */
 async function validateEnv(userConfig: UserConfig, envConfig: ConfigEnv, options?: PluginOptions) {
   const rootDir = userConfig.root || cwd()
-  const env = loadEnv(envConfig.mode, rootDir, '')
+  const env = loadEnv(envConfig.mode, rootDir, userConfig.envPrefix)
 
   const isInlineConfig = options !== undefined
   if (!isInlineConfig) {

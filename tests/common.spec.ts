@@ -104,4 +104,19 @@ test.group('vite-plugin-validate-env', (group) => {
     const fn = plugin.config!.bind(plugin, viteConfig, viteEnvConfig)
     await assert.rejects(fn, 'Missing configuration for vite-plugin-validate-env')
   })
+
+  test('Should pick up var with custom prefix', async ({ assert }) => {
+    const plugin = ValidateEnv({
+      CUSTOM_TEST: Schema.boolean(),
+    })
+
+    await fs.add(`.env.development`, `CUSTOM_TEST=not boolean`)
+
+    // @ts-expect-error - `config` is the handler
+    const fn = plugin.config!.bind(plugin, { ...viteConfig, envPrefix: 'CUSTOM_' }, viteEnvConfig)
+    await assert.rejects(
+      fn,
+      'E_INVALID_ENV_VALUE: Value for environment variable "CUSTOM_TEST" must be a boolean, instead received "not boolean"'
+    )
+  })
 })
