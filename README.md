@@ -38,6 +38,9 @@ export default defineConfig({
 
 In case you want to change some plugin options, in particular change the validator (for Zod), you have to set your options as follows: 
 ```ts
+import { defineConfig } from '@julr/vite-plugin-validate-env'
+import { z } from 'zod'
+
 export default defineConfig({
   plugins: [
     ValidateEnv({
@@ -99,6 +102,9 @@ pnpm install zod
 Then, you can use it as follows: 
 ```ts
 // env.ts
+import { defineConfig } from '@julr/vite-plugin-validate-env'
+import { z } from 'zod'
+
 export default defineConfig({
   validator: 'zod',
   schema: {
@@ -114,6 +120,9 @@ Beware, there are some limitations if you use Zod. For example, you can't use a 
 So to validate a boolean you must use `preprocess`, and `transform`, like this:
 ```ts
 // env.ts
+import { defineConfig } from '@julr/vite-plugin-validate-env'
+import { z } from 'zod'
+
 export default defineConfig({
   validator: 'zod',
   schema: {
@@ -131,6 +140,8 @@ You can also add a `env.ts` file at the root of your project to define your envi
 
 ```ts
 // vite.config.ts
+import { ValidateEnv } from '@julr/vite-plugin-validate-env'
+
 export default defineConfig({
   plugins: [ValidateEnv()],
 })
@@ -138,6 +149,8 @@ export default defineConfig({
 
 ```ts
 // env.ts
+import { defineConfig, Schema } from '@julr/vite-plugin-validate-env'
+
 export default defineConfig({
  VITE_MY_VAR: Schema.enum(['foo', 'bar'] as const),
 })
@@ -150,6 +163,8 @@ Let's imagine the following case: you want to expose a variable `VITE_AUTH_API_U
 
 ```ts
 // Built-in validation
+import { defineConfig, Schema } from '@julr/vite-plugin-validate-env'
+
 export default defineConfig({
   VITE_AUTH_API_URL: (key, value) => {
     if (!value) {
@@ -167,6 +182,9 @@ export default defineConfig({
 
 ```ts
 // Zod validation
+import { defineConfig } from '@julr/vite-plugin-validate-env'
+import { z } from 'zod'
+
 export default defineConfig({
   validator: 'zod',
   schema: {
