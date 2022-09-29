@@ -25,7 +25,8 @@ pnpm add -D @julr/vite-plugin-validate-env
 ### Plugin options 
 The easiest way to define the options is to directly define the scheme as follows: 
 ```ts
-import { defineConfig } from '@julr/vite-plugin-validate-env'
+// vite.config.ts
+import { defineConfig } from "vite";
 
 export default defineConfig({
   plugins: [
@@ -38,7 +39,7 @@ export default defineConfig({
 
 In case you want to change some plugin options, in particular change the validator (for Zod), you have to set your options as follows: 
 ```ts
-import { defineConfig } from '@julr/vite-plugin-validate-env'
+import { defineConfig } from "vite";
 import { z } from 'zod'
 
 export default defineConfig({
@@ -56,7 +57,8 @@ export default defineConfig({
 ### Built-in validator
 
 ```ts
-import { Schema, ValidateEnv, defineConfig } from '@julr/vite-plugin-validate-env'
+import { Schema, ValidateEnv } from "@julr/vite-plugin-validate-env"
+import { defineConfig } from "vite";
 
 export default defineConfig({
   plugins: [
@@ -140,7 +142,7 @@ You can also add a `env.ts` file at the root of your project to define your envi
 
 ```ts
 // vite.config.ts
-import { ValidateEnv } from '@julr/vite-plugin-validate-env'
+import { defineConfig } from 'vite'
 
 export default defineConfig({
   plugins: [ValidateEnv()],
