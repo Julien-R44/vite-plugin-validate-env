@@ -27,6 +27,7 @@ The easiest way to define the options is to directly define the scheme as follow
 ```ts
 // vite.config.ts
 import { defineConfig } from "vite";
+import { ValidateEnv } from "@julr/vite-plugin-validate-env";
 
 export default defineConfig({
   plugins: [
@@ -41,6 +42,7 @@ In case you want to change some plugin options, in particular change the validat
 ```ts
 import { defineConfig } from "vite";
 import { z } from 'zod'
+import { ValidateEnv } from "@julr/vite-plugin-validate-env";
 
 export default defineConfig({
   plugins: [
@@ -143,6 +145,7 @@ You can also add a `env.ts` file at the root of your project to define your envi
 ```ts
 // vite.config.ts
 import { defineConfig } from 'vite'
+import { ValidateEnv } from "@julr/vite-plugin-validate-env";
 
 export default defineConfig({
   plugins: [ValidateEnv()],
