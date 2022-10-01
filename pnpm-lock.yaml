@@ -6,11 +6,13 @@ specifiers:
   '@japa/runner': ^2.1.2
   '@japa/spec-reporter': ^1.2.0
   '@julr/eslint-config': ^0.3.2
+  '@poppinss/colors': ^3.0.2
   '@poppinss/dev-utils': ^2.0.3
   '@poppinss/validator-lite': ^1.0.1
   '@types/node': ^18.7.15
   '@types/validator': ^13.7.6
   bumpp: ^8.2.1
+  cross-env: ^7.0.3
   eslint: ^8.23.0
   nodemon: ^2.0.19
   pnpm: ^7.11.0
@@ -25,6 +27,7 @@ specifiers:
   zod: ^3.19.0
 
 dependencies:
+  '@poppinss/colors': 3.0.2
   '@poppinss/validator-lite': 1.0.1
   unconfig: 0.3.6
   validator: 13.7.0
@@ -39,6 +42,7 @@ devDependencies:
   '@types/node': 18.7.15
   '@types/validator': 13.7.6
   bumpp: 8.2.1
+  cross-env: 7.0.3
   eslint: 8.23.0
   nodemon: 2.0.19
   pnpm: 7.11.0
@@ -704,8 +708,7 @@ packages:
     resolution: {integrity: sha512-kgIiDPKUV0IaNtzLKricxd3mMWepqCbgh2Mb0M8C5zyS1bJ0K86s6dMu9xEKtF2XksqyE0qV4ANtMnTCMjQgvA==}
     dependencies:
       color-support: 1.1.3
-      kleur: 4.1.4
-    dev: true
+      kleur: 4.1.5
 
   /@poppinss/dev-utils/2.0.3:
     resolution: {integrity: sha512-r38jxyRKtkuiS/51DgLJ6faLzm57CanPcDFePlAh+LxfO2i8YN1jNcS6nPyXIPsjo4sZuEy78fGBQ+7KwKqPmw==}
@@ -1615,7 +1618,6 @@ packages:
   /color-support/1.1.3:
     resolution: {integrity: sha512-qiBjkpbMLO/HL68y+lh4q0/O1MZFj2RX6X/KmMa3+gJD3z+WwI1ZzDHysvqHGS3mP6mznPckpXmw1nI9cJjyRg==}
     hasBin: true
-    dev: true
 
   /columnify/1.6.0:
     resolution: {integrity: sha512-lomjuFZKfM6MSAnV9aCZC9sc0qGbmZdfygNv+nCpqVkSKdCxCklLtd16O0EILGkImHw9ZpHkAnHaB+8Zxq5W6Q==}
@@ -1678,6 +1680,14 @@ packages:
 
   /create-require/1.1.1:
     resolution: {integrity: sha512-dcKFX3jn0MpIaXjisoRvexIJVEKzaq7z2rZKxf+MSr9TkdmHmsU4m2lcLojrj/FHl8mk5VxMmYA+ftRkP/3oKQ==}
+    dev: true
+
+  /cross-env/7.0.3:
+    resolution: {integrity: sha512-+/HKd6EgcQCJGh2PSjZuUitQBQynKor4wrFbRg4DtAgS1aWO+gU52xpH7M9ScGgXSYmAVS9bIJ8EzuaGw0oNAw==}
+    engines: {node: '>=10.14', npm: '>=6', yarn: '>=1'}
+    hasBin: true
+    dependencies:
+      cross-spawn: 7.0.3
     dev: true
 
   /cross-spawn/7.0.3:
@@ -3659,7 +3669,6 @@ packages:
   /kleur/4.1.5:
     resolution: {integrity: sha512-o+NO+8WrRiQEE4/7nwRJhN1HWpVmJm511pBHUxPLtp0BUISzlBplORYSmTclCnJvQq2tKu/sgl3xVpkc7ZWuQQ==}
     engines: {node: '>=6'}
-    dev: true
 
   /language-subtag-registry/0.3.22:
     resolution: {integrity: sha512-tN0MCzyWnoz/4nHS6uxdlFWoUZT7ABptwKPQ52Ea7URk6vll88bWBVhodtnlfEuCcKWNGoc+uGbw1cwa9IKh/w==}

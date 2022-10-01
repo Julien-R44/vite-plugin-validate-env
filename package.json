@@ -55,7 +55,7 @@
     "prepublishOnly": "nr build",
     "release": "bumpp --commit --push --tag && pnpm publish",
     "start": "node --loader=ts-node/esm src/index.ts",
-    "test": "ts-node bin/test.ts",
+    "test": "cross-env NODE_ENV=testing ts-node bin/test.ts",
     "test:watch": "nodemon --ignore ./tests/fixtures bin/test.ts",
     "typecheck": "tsc --noEmit"
   },
@@ -69,6 +69,7 @@
     }
   },
   "dependencies": {
+    "@poppinss/colors": "^3.0.2",
     "@poppinss/validator-lite": "^1.0.1",
     "unconfig": "^0.3.6",
     "validator": "^13.7.0"
@@ -83,6 +84,7 @@
     "@types/node": "^18.7.15",
     "@types/validator": "^13.7.6",
     "bumpp": "^8.2.1",
+    "cross-env": "^7.0.3",
     "eslint": "^8.23.0",
     "nodemon": "^2.0.19",
     "pnpm": "^7.11.0",

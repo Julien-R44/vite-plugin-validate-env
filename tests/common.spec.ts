@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/prefer-ts-expect-error */
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+
 import { join } from 'path'
 import { test } from '@japa/runner'
 import { Filesystem } from '@poppinss/dev-utils'
@@ -13,46 +16,51 @@ test.group('vite-plugin-validate-env', (group) => {
   })
 
   test('Basic validation', async ({ assert }) => {
-    const plugin = ValidateEnv({
-      VITE_TEST: Schema.boolean(),
-    })
+    assert.plan(1)
 
+    const plugin = ValidateEnv({ VITE_TEST: Schema.boolean() })
     await fs.add(`.env.development`, `VITE_TEST=not boolean`)
 
-    // @ts-expect-error - `config` is the handler
-    const fn = plugin.config!.bind(plugin, viteConfig, viteEnvConfig)
-    await assert.rejects(
-      fn,
-      'E_INVALID_ENV_VALUE: Value for environment variable "VITE_TEST" must be a boolean, instead received "not boolean"'
-    )
+    try {
+      // @ts-ignore
+      await plugin.config(viteConfig, viteEnvConfig)
+    } catch (error: any) {
+      assert.include(error.message, '"VITE_TEST" must be a boolean')
+    }
   })
 
   test('Custom error message', async ({ assert }) => {
-    const plugin = ValidateEnv({
-      VITE_TEST: Schema.boolean({ message: 'Heyhey' }),
-    })
+    assert.plan(2)
 
+    const plugin = ValidateEnv({ VITE_TEST: Schema.boolean({ message: 'Heyhey' }) })
     await fs.add(`.env.development`, `VITE_TEST=not boolean`)
 
-    // @ts-expect-error - `config` is the handler
-    const fn = plugin.config!.bind(plugin, viteConfig, viteEnvConfig)
-    await assert.rejects(fn, 'E_INVALID_ENV_VALUE: Heyhey')
+    try {
+      // @ts-ignore
+      await plugin.config(viteConfig, viteEnvConfig)
+    } catch (error: any) {
+      assert.include(error.message, 'VITE_TEST')
+      assert.include(error.message, 'Heyhey')
+    }
   })
 
   test('Custom validator method', async ({ assert }) => {
+    assert.plan(1)
+
     const plugin = ValidateEnv({
       VITE_TEST: (_key, value) => {
-        if (value !== 'valid') {
-          throw new Error('Value must be "valid"')
-        }
+        if (value !== 'valid') throw new Error('Value must be "valid"')
       },
     })
 
     await fs.add(`.env.development`, `VITE_TEST=not valid`)
 
-    // @ts-expect-error - `config` is the handler
-    const fn = plugin.config!.bind(plugin, viteConfig, viteEnvConfig)
-    await assert.rejects(fn, 'Value must be "valid"')
+    try {
+      // @ts-ignore
+      await plugin.config(viteConfig, viteEnvConfig)
+    } catch (error: any) {
+      assert.include(error.message, 'Value must be "valid"')
+    }
   })
 
   test('Parsing result', async ({ assert }) => {
@@ -72,12 +80,14 @@ test.group('vite-plugin-validate-env', (group) => {
 
     await fs.add(`.env.development`, `VITE_URL_TRAILING=test.com`)
 
-    // @ts-expect-error - `config` is the handler
+    // @ts-ignore
     await plugin.config!(viteConfig, viteEnvConfig)
     assert.equal(process.env.VITE_URL_TRAILING, 'test.com/')
   })
 
   test('Dedicated config file', async ({ assert }) => {
+    assert.plan(1)
+
     const plugin = ValidateEnv()
 
     await fs.add(`.env.development`, `VITE_MY_VAR=true`)
@@ -90,9 +100,12 @@ test.group('vite-plugin-validate-env', (group) => {
     }`
     )
 
-    // @ts-expect-error - `config` is the handler
-    const fn = plugin.config!.bind(plugin, viteConfig, viteEnvConfig)
-    await assert.rejects(fn, 'Error validating')
+    try {
+      // @ts-ignore
+      await plugin.config(viteConfig, viteEnvConfig)
+    } catch (error: any) {
+      assert.include(error.message, 'Error validating')
+    }
   })
 
   test('Should fail if no schema is found', async ({ assert }) => {
@@ -106,17 +119,39 @@ test.group('vite-plugin-validate-env', (group) => {
   })
 
   test('Should pick up var with custom prefix', async ({ assert }) => {
-    const plugin = ValidateEnv({
-      CUSTOM_TEST: Schema.boolean(),
-    })
+    assert.plan(1)
+
+    const plugin = ValidateEnv({ CUSTOM_TEST: Schema.boolean() })
 
     await fs.add(`.env.development`, `CUSTOM_TEST=not boolean`)
 
-    // @ts-expect-error - `config` is the handler
-    const fn = plugin.config!.bind(plugin, { ...viteConfig, envPrefix: 'CUSTOM_' }, viteEnvConfig)
-    await assert.rejects(
-      fn,
-      'E_INVALID_ENV_VALUE: Value for environment variable "CUSTOM_TEST" must be a boolean, instead received "not boolean"'
-    )
+    try {
+      // @ts-ignore
+      await plugin.config({ ...viteConfig, envPrefix: 'CUSTOM_' }, viteEnvConfig)
+    } catch (error: any) {
+      assert.include(
+        error.message,
+        'Value for environment variable "CUSTOM_TEST" must be a boolean, instead received "not boolean"'
+      )
+    }
+  })
+
+  test('Display multiple errors', async ({ assert }) => {
+    assert.plan(2)
+
+    const plugin = ValidateEnv({
+      VITE_TEST: Schema.boolean(),
+      VITE_TEST2: Schema.boolean(),
+    })
+
+    await fs.add(`.env.development`, '')
+
+    try {
+      // @ts-ignore
+      await plugin.config(viteConfig, viteEnvConfig)
+    } catch (error: any) {
+      assert.include(error.message, 'Missing environment variable "VITE_TEST"')
+      assert.include(error.message, 'Missing environment variable "VITE_TEST2"')
+    }
   })
 })

@@ -1,14 +1,9 @@
 import { cwd } from 'process'
 import { type Plugin, loadEnv } from 'vite'
 import { createConfigLoader as createLoader } from 'unconfig'
-import { Exception } from './exception'
-import type {
-  FullPluginOptions,
-  PluginOptions,
-  PoppinsSchema,
-  Schema,
-  ZodSchema,
-} from './contracts'
+import { builtinValidation } from './validators/builtin'
+import { zodValidation } from './validators/zod'
+import type { FullPluginOptions, PluginOptions, Schema } from './contracts'
 import type { ConfigEnv, UserConfig } from 'vite'
 
 /**
@@ -27,33 +22,6 @@ async function loadConfig(rootDir: string) {
 
   const result = await loader.load()
   return result.config
-}
-
-/**
- * Validate the env values with builtin validator
- */
-async function builtinValidation(env: Record<string, string>, schema: PoppinsSchema) {
-  for (const [key, validator] of Object.entries(schema!)) {
-    const res = validator(key, env[key])
-    process.env[key] = res
-  }
-}
-
-/**
- * Validate the env values with Zod validator
- */
-async function zodValidation(env: Record<string, string>, schema: ZodSchema) {
-  for (const [key, validator] of Object.entries(schema!)) {
-    const result = validator.safeParse(env[key])
-
-    if (!result.success) {
-      throw new Exception(
-        `E_INVALID_ENV_VALUE: Invalid value for "${key}" : ${result.error.issues[0].message}`,
-        'E_INVALID_ENV_VALUE'
-      )
-    }
-    process.env[key] = result.data
-  }
 }
 
 /**

@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/prefer-ts-expect-error */
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+
 import { join } from 'path'
 import { z } from 'zod'
 import { test } from '@japa/runner'
@@ -10,18 +13,21 @@ const viteEnvConfig = { mode: 'development', command: 'serve' } as const
 
 test.group('Zod validation adaptater', () => {
   test('Basic', async ({ assert }) => {
+    assert.plan(1)
+
     const plugin = ValidateEnv({
       validator: 'zod',
-      schema: {
-        VITE_TEST: z.string().url().max(10),
-      },
+      schema: { VITE_TEST: z.string().url().max(10) },
     })
 
     await fs.add(`.env.development`, `VITE_TEST=htest`)
 
-    // @ts-expect-error - `config` is the handler
-    const fn = plugin.config!.bind(plugin, viteConfig, viteEnvConfig)
-    await assert.rejects(fn, 'E_INVALID_ENV_VALUE: Invalid value for "VITE_TEST" : Invalid url')
+    try {
+      // @ts-ignore
+      await plugin.config(viteConfig, viteEnvConfig)
+    } catch (error: any) {
+      assert.include(error.message, 'Invalid value for "VITE_TEST" : Invalid url')
+    }
   })
 
   test('Transform value', async ({ assert }) => {
@@ -43,6 +49,8 @@ test.group('Zod validation adaptater', () => {
   })
 
   test('Custom error message', async ({ assert }) => {
+    assert.plan(1)
+
     const plugin = ValidateEnv({
       validator: 'zod',
       schema: {
@@ -52,15 +60,17 @@ test.group('Zod validation adaptater', () => {
 
     await fs.add(`.env.development`, `VITE_LONG_STRING=superlongstring`)
 
-    // @ts-expect-error - `config` is the handler
-    const fn = plugin.config!.bind(plugin, viteConfig, viteEnvConfig)
-    await assert.rejects(
-      fn,
-      'E_INVALID_ENV_VALUE: Invalid value for "VITE_LONG_STRING" : Max 10 characters'
-    )
+    try {
+      // @ts-ignore
+      await plugin.config(viteConfig, viteEnvConfig)
+    } catch (error: any) {
+      assert.include(error.message, 'Invalid value for "VITE_LONG_STRING" : Max 10 characters')
+    }
   })
 
   test('Refine value', async ({ assert }) => {
+    assert.plan(1)
+
     const plugin = ValidateEnv({
       validator: 'zod',
       schema: {
@@ -72,11 +82,33 @@ test.group('Zod validation adaptater', () => {
 
     await fs.add(`.env.development`, `VITE_REFINED=superlongstring`)
 
-    // @ts-expect-error - `config` is the handler
-    const fn = plugin.config!.bind(plugin, viteConfig, viteEnvConfig)
-    await assert.rejects(
-      fn,
-      'E_INVALID_ENV_VALUE: Invalid value for "VITE_REFINED" : Max 10 characters'
-    )
+    try {
+      // @ts-ignore
+      await plugin.config(viteConfig, viteEnvConfig)
+    } catch (error: any) {
+      assert.include(error.message, 'Invalid value for "VITE_REFINED" : Max 10 characters')
+    }
+  })
+
+  test('Display multiple errors', async ({ assert }) => {
+    assert.plan(2)
+
+    const plugin = ValidateEnv({
+      validator: 'zod',
+      schema: {
+        VITE_A: z.string(),
+        VITE_B: z.string(),
+      },
+    })
+
+    await fs.add(`.env.development`, ``)
+
+    try {
+      // @ts-ignore
+      await plugin.config(viteConfig, viteEnvConfig)
+    } catch (error: any) {
+      assert.include(error.message, 'Invalid value for "VITE_A" : Required')
+      assert.include(error.message, 'Invalid value for "VITE_B" : Required')
+    }
   })
 })
