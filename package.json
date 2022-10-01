@@ -52,7 +52,7 @@
     "dev": "unbuild --stub",
     "lint": "eslint . --ext=.ts",
     "format": "prettier --write .",
-    "prepublishOnly": "nr build",
+    "prepublishOnly": "pnpm build",
     "release": "bumpp --commit --push --tag && pnpm publish",
     "start": "node --loader=ts-node/esm src/index.ts",
     "test": "cross-env NODE_ENV=testing ts-node bin/test.ts",
@@ -75,7 +75,6 @@
     "validator": "^13.7.0"
   },
   "devDependencies": {
-    "@antfu/ni": "^0.18.0",
     "@japa/assert": "^1.3.5",
     "@japa/runner": "^2.1.2",
     "@japa/spec-reporter": "^1.2.0",
