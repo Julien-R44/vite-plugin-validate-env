@@ -1,6 +1,6 @@
 {
   "name": "@julr/vite-plugin-validate-env",
-  "version": "0.1.3",
+  "version": "0.2.0",
   "packageManager": "pnpm@7.11.0",
   "description": "✅ Vite plugin for validating your environment variables",
   "author": "Julien Ripouteau <julien@ripouteau.com>",
