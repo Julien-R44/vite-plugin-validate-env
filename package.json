@@ -18,7 +18,9 @@
     "vite",
     "vite-plugin",
     "env-var",
-    "validation"
+    "validation",
+    "zod",
+    "env"
   ],
   "exports": {
     ".": {
