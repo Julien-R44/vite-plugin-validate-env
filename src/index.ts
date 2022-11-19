@@ -1,5 +1,6 @@
 import { cwd } from 'process'
-import { type Plugin, loadEnv } from 'vite'
+import path from 'node:path'
+import { type Plugin, loadEnv, normalizePath } from 'vite'
 import { createConfigLoader as createLoader } from 'unconfig'
 import { builtinValidation } from './validators/builtin'
 import { zodValidation } from './validators/zod'
@@ -47,7 +48,16 @@ function getNormalizedOptions(options: PluginOptions) {
  */
 async function validateEnv(userConfig: UserConfig, envConfig: ConfigEnv, options?: PluginOptions) {
   const rootDir = userConfig.root || cwd()
-  const env = loadEnv(envConfig.mode, rootDir, userConfig.envPrefix)
+
+  const resolvedRoot = normalizePath(
+    userConfig.root ? path.resolve(userConfig.root) : process.cwd()
+  )
+
+  const envDir = userConfig.envDir
+    ? normalizePath(path.resolve(resolvedRoot, userConfig.envDir))
+    : resolvedRoot
+
+  const env = loadEnv(envConfig.mode, envDir, userConfig.envPrefix)
 
   const isInlineConfig = options !== undefined
   if (!isInlineConfig) {

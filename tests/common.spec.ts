@@ -136,6 +136,19 @@ test.group('vite-plugin-validate-env', (group) => {
     }
   })
 
+  test('Should use envDir option from vite config', async ({ assert }) => {
+    assert.plan(1)
+
+    const plugin = ValidateEnv({ VITE_XXX: Schema.string() })
+
+    await fs.add(`./env-directory/.env.development`, `VITE_XXX=bonjour`)
+
+    // @ts-ignore
+    await plugin.config({ ...viteConfig, envDir: './env-directory' }, viteEnvConfig)
+
+    assert.equal(process.env.VITE_XXX, 'bonjour')
+  })
+
   test('Display multiple errors', async ({ assert }) => {
     assert.plan(2)
 
