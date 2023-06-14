@@ -167,4 +167,28 @@ test.group('vite-plugin-validate-env', (group) => {
       assert.include(error.message, 'Missing environment variable "VITE_TEST2"')
     }
   })
+
+  test('Optional Variables', async ({ assert }) => {
+    // assert.plan(2);
+
+    const plugin = ValidateEnv({ VITE_OPTIONAL: Schema.number.optional() })
+
+    // Test with the variable set, but invalid
+    await fs.add('.env.development', 'VITE_OPTIONAL=not a number')
+    try {
+      // @ts-ignore
+      await plugin.config(viteConfig, viteEnvConfig)
+    } catch (error: any) {
+      assert.include(
+        error.message,
+        'Value for environment variable "VITE_OPTIONAL" must be numeric, instead received'
+      )
+    }
+
+    // Test without variable
+    await fs.add('.env.development', '')
+    // @ts-ignore
+    await plugin.config(viteConfig, viteEnvConfig)
+    assert.equal(process.env.VITE_OPTIONAL, undefined)
+  })
 })

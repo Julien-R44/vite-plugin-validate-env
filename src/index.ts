@@ -1,11 +1,10 @@
 import { cwd } from 'process'
 import path from 'node:path'
-import { type Plugin, loadEnv, normalizePath } from 'vite'
+import { type ConfigEnv, type Plugin, type UserConfig, loadEnv, normalizePath } from 'vite'
 import { createConfigLoader as createLoader } from 'unconfig'
 import { builtinValidation } from './validators/builtin'
 import { zodValidation } from './validators/zod'
 import type { FullPluginOptions, PluginOptions, Schema } from './contracts'
-import type { ConfigEnv, UserConfig } from 'vite'
 
 /**
  * Load schema defined in `env.ts` file using unconfig
