@@ -11,7 +11,13 @@ const fs = new Filesystem(join(__dirname, 'fixtures'))
 const viteConfig = { root: fs.basePath }
 const viteEnvConfig = { mode: 'development', command: 'serve' } as const
 
-test.group('Zod validation adaptater', () => {
+const ENV_FILENAME = '.env.development'
+
+test.group('Zod validation adaptater', (group) => {
+  group.each.teardown(async () => {
+    await fs.cleanup()
+  })
+
   test('Basic', async ({ assert }) => {
     assert.plan(1)
 
@@ -20,7 +26,7 @@ test.group('Zod validation adaptater', () => {
       schema: { VITE_TEST: z.string().url().max(10) },
     })
 
-    await fs.add(`.env.development`, `VITE_TEST=htest`)
+    await fs.add(ENV_FILENAME, 'VITE_TEST=htest')
 
     try {
       // @ts-ignore
@@ -41,9 +47,9 @@ test.group('Zod validation adaptater', () => {
       },
     })
 
-    await fs.add(`.env.development`, `VITE_TEST=hello`)
+    await fs.add(ENV_FILENAME, 'VITE_TEST=hello')
 
-    // @ts-expect-error - `config` is the handler
+    // @ts-expect-error - 'config' is the handler
     await plugin.config!(viteConfig, viteEnvConfig)
     assert.equal(process.env.VITE_TEST, 'HELLO')
   })
@@ -58,7 +64,7 @@ test.group('Zod validation adaptater', () => {
       },
     })
 
-    await fs.add(`.env.development`, `VITE_LONG_STRING=superlongstring`)
+    await fs.add(ENV_FILENAME, 'VITE_LONG_STRING=superlongstring')
 
     try {
       // @ts-ignore
@@ -80,7 +86,7 @@ test.group('Zod validation adaptater', () => {
       },
     })
 
-    await fs.add(`.env.development`, `VITE_REFINED=superlongstring`)
+    await fs.add(ENV_FILENAME, 'VITE_REFINED=superlongstring')
 
     try {
       // @ts-ignore
@@ -101,7 +107,7 @@ test.group('Zod validation adaptater', () => {
       },
     })
 
-    await fs.add(`.env.development`, ``)
+    await fs.add(ENV_FILENAME, '')
 
     try {
       // @ts-ignore
@@ -110,5 +116,32 @@ test.group('Zod validation adaptater', () => {
       assert.include(error.message, 'Invalid value for "VITE_A" : Required')
       assert.include(error.message, 'Invalid value for "VITE_B" : Required')
     }
+  })
+
+  test('Optional Variables', async ({ assert }) => {
+    assert.plan(2)
+
+    const plugin = ValidateEnv({
+      validator: 'zod',
+      schema: { VITE_OPTIONAL_ZOD: z.string().max(2).optional() },
+    })
+
+    // Test with the variable set, but invalid
+    await fs.add(ENV_FILENAME, 'VITE_OPTIONAL_ZOD=hello')
+    try {
+      // @ts-ignore
+      await plugin.config(viteConfig, viteEnvConfig)
+    } catch (error: any) {
+      assert.include(
+        error.message,
+        'Invalid value for "VITE_OPTIONAL_ZOD" : String must contain at most 2 character(s)'
+      )
+    }
+
+    // Test without variable
+    await fs.add(ENV_FILENAME, '')
+    // @ts-ignore
+    await plugin.config(viteConfig, viteEnvConfig)
+    assert.equal(process.env.VITE_OPTIONAL_ZOD, undefined)
   })
 })

@@ -24,6 +24,13 @@ export function builtinValidation(env: Record<string, string>, schema: PoppinsSc
   for (const [key, validator] of Object.entries(schema!)) {
     try {
       const res = validator(key, env[key])
+
+      // Handle undefined aka optional results
+      if (typeof res === 'undefined') {
+        delete process.env[key]
+        return
+      }
+
       process.env[key] = res
     } catch (err) {
       errors.push({ key, err })
