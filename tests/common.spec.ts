@@ -191,4 +191,23 @@ test.group('vite-plugin-validate-env', (group) => {
     await plugin.config(viteConfig, viteEnvConfig)
     assert.equal(process.env.VITE_OPTIONAL, undefined)
   })
+
+  test('dont stop validation after undefined result', async ({ assert }) => {
+    assert.plan(2)
+
+    const plugin = ValidateEnv({
+      validator: 'builtin',
+      schema: {
+        VITE_OPTIONAL: Schema.number.optional(),
+        VITE_MY_VAR: Schema.string(),
+      },
+    })
+
+    await fs.add('.env.development', 'VITE_MY_VAR=hello')
+    // @ts-ignore
+    await plugin.config(viteConfig, viteEnvConfig)
+
+    assert.equal(process.env.VITE_OPTIONAL, undefined)
+    assert.equal(process.env.VITE_MY_VAR, 'hello')
+  })
 })

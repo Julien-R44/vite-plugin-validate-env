@@ -28,7 +28,7 @@ export function builtinValidation(env: Record<string, string>, schema: PoppinsSc
       // Handle undefined aka optional results
       if (typeof res === 'undefined') {
         delete process.env[key]
-        return
+        continue
       }
 
       process.env[key] = res

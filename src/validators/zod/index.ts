@@ -32,7 +32,7 @@ export async function zodValidation(env: Record<string, string>, schema: ZodSche
     // Handle undefined aka optional results
     if (typeof result.data === 'undefined') {
       delete process.env[key]
-      return
+      continue
     }
 
     process.env[key] = result.data

@@ -144,4 +144,23 @@ test.group('Zod validation adaptater', (group) => {
     await plugin.config(viteConfig, viteEnvConfig)
     assert.equal(process.env.VITE_OPTIONAL_ZOD, undefined)
   })
+
+  test('dont stop validation after undefined result', async ({ assert }) => {
+    assert.plan(2)
+
+    const plugin = ValidateEnv({
+      validator: 'zod',
+      schema: {
+        VITE_OPTIONAL_ZOD: z.string().max(2).optional(),
+        VITE_MY_VAR: z.string(),
+      },
+    })
+
+    await fs.add(ENV_FILENAME, 'VITE_MY_VAR=hello')
+    // @ts-ignore
+    await plugin.config(viteConfig, viteEnvConfig)
+
+    assert.equal(process.env.VITE_OPTIONAL_ZOD, undefined)
+    assert.equal(process.env.VITE_MY_VAR, 'hello')
+  })
 })
