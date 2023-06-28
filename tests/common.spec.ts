@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/prefer-ts-expect-error */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
+/* eslint-disable sonarjs/no-duplicate-string */
 
 import { join } from 'path'
 import { test } from '@japa/runner'
