@@ -27,7 +27,7 @@ The easiest way to define the options is to directly define the scheme as follow
 ```ts
 // vite.config.ts
 import { defineConfig } from "vite";
-import { ValidateEnv } from "@julr/vite-plugin-validate-env";
+import { Schema, ValidateEnv } from "@julr/vite-plugin-validate-env";
 
 export default defineConfig({
   plugins: [
