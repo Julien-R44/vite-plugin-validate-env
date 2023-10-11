@@ -13,8 +13,8 @@ export type RecordViteKeys<T> = Record<`${string}_${string}`, T>
 export type PluginOptions = Schema | FullPluginOptions
 
 export type FullPluginOptions =
-  | { validator: 'builtin'; schema: PoppinsSchema }
-  | { validator: 'zod'; schema: ZodSchema }
+  | { validator: 'builtin'; schema: PoppinsSchema; showOutput?: boolean }
+  | { validator: 'zod'; schema: ZodSchema; showOutput?: boolean }
 
 /**
  * Contract for schema definition for poppins validator
