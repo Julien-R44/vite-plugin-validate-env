@@ -1,5 +1,6 @@
-import { colors } from '../../utils/colors'
 import type { ZodSchema } from 'zod'
+
+import { colors } from '../../utils/colors.js'
 
 export function errorReporter(errors: any[]) {
   let finalMessage = colors.red('Failed to validate environment variables : \n')
@@ -20,6 +21,7 @@ export function errorReporter(errors: any[]) {
  */
 export async function zodValidation(env: Record<string, string>, schema: ZodSchema) {
   const errors = []
+  const variables = []
 
   for (const [key, validator] of Object.entries(schema!)) {
     const result = validator.safeParse(env[key])
@@ -30,15 +32,14 @@ export async function zodValidation(env: Record<string, string>, schema: ZodSche
     }
 
     // Handle undefined aka optional results
-    if (typeof result.data === 'undefined') {
-      delete process.env[key]
-      continue
-    }
+    if (typeof result.data === 'undefined') continue
 
-    process.env[key] = result.data
+    variables.push({ key, value: result.data })
   }
 
   if (errors.length) {
     throw new Error(errorReporter(errors))
   }
+
+  return variables
 }

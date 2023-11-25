@@ -1,10 +1,12 @@
-import { cwd } from 'process'
 import path from 'node:path'
-import { type ConfigEnv, type Plugin, type UserConfig, loadEnv, normalizePath } from 'vite'
+import { cwd } from 'node:process'
 import { createConfigLoader as createLoader } from 'unconfig'
-import { builtinValidation } from './validators/builtin'
-import { zodValidation } from './validators/zod'
-import type { FullPluginOptions, PluginOptions, Schema } from './contracts'
+import { type ConfigEnv, type Plugin, type UserConfig, loadEnv, normalizePath } from 'vite'
+
+import { colors } from './utils/colors.js'
+import { zodValidation } from './validators/zod/index.js'
+import { builtinValidation } from './validators/builtin/index.js'
+import type { FullPluginOptions, PluginOptions, Schema } from './contracts/index.js'
 
 /**
  * Load schema defined in `env.ts` file using unconfig
@@ -49,7 +51,7 @@ async function validateEnv(userConfig: UserConfig, envConfig: ConfigEnv, options
   const rootDir = userConfig.root || cwd()
 
   const resolvedRoot = normalizePath(
-    userConfig.root ? path.resolve(userConfig.root) : process.cwd()
+    userConfig.root ? path.resolve(userConfig.root) : process.cwd(),
   )
 
   const envDir = userConfig.envDir
@@ -77,13 +79,23 @@ async function validateEnv(userConfig: UserConfig, envConfig: ConfigEnv, options
     throw new Error(`Invalid validator "${validator}"`)
   }
 
-  await validatorFn(env, schema as any)
+  const variables = await validatorFn(env, schema as any)
 
-  if (options.showOutput) {
+  if ('showOutput' in options && options.showOutput === true) {
     for (const key of Object.keys(schema)) {
-      console.log(`${colors.green(`[${key}]`)}\n  ${process.env[key]}`);
+      console.log(`${colors.green(`[${key}]`)}\n  ${process.env[key]}`)
     }
-    console.log('');
+    console.log('')
+  }
+
+  return {
+    define: variables.reduce(
+      (acc, { key, value }) => {
+        acc[`import.meta.env.${key}`] = JSON.stringify(value)
+        return acc
+      },
+      {} as Record<string, unknown>,
+    ),
   }
 }
 
@@ -98,4 +110,4 @@ export const ValidateEnv = (options?: PluginOptions): Plugin => ({
 export const defineConfig = <T extends PluginOptions>(config: T): T => config
 
 export { schema as Schema } from '@poppinss/validator-lite'
-export type { ImportMetaEnvAugmented } from './contracts'
+export type { ImportMetaEnvAugmented } from './contracts/index.js'

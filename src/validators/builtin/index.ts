@@ -1,5 +1,5 @@
-import { colors } from '../../utils/colors'
-import type { PoppinsSchema } from '../../contracts'
+import { colors } from '../../utils/colors.js'
+import type { PoppinsSchema } from '../../contracts/index.js'
 
 export function errorReporter(errors: any[]) {
   let finalMessage = colors.red('Failed to validate environment variables : \n')
@@ -20,18 +20,16 @@ export function errorReporter(errors: any[]) {
  */
 export function builtinValidation(env: Record<string, string>, schema: PoppinsSchema) {
   const errors = []
+  const variables = []
 
   for (const [key, validator] of Object.entries(schema!)) {
     try {
       const res = validator(key, env[key])
 
       // Handle undefined aka optional results
-      if (typeof res === 'undefined') {
-        delete process.env[key]
-        continue
-      }
+      if (typeof res === 'undefined') continue
 
-      process.env[key] = res
+      variables.push({ key, value: res })
     } catch (err) {
       errors.push({ key, err })
     }
@@ -40,4 +38,6 @@ export function builtinValidation(env: Record<string, string>, schema: PoppinsSc
   if (errors.length) {
     throw new Error(errorReporter(errors))
   }
+
+  return variables
 }
