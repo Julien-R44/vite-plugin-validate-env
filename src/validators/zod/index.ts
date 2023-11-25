@@ -1,5 +1,6 @@
-import { colors } from '../../utils/colors.js'
 import type { ZodSchema } from 'zod'
+
+import { colors } from '../../utils/colors.js'
 
 export function errorReporter(errors: any[]) {
   let finalMessage = colors.red('Failed to validate environment variables : \n')
@@ -31,6 +32,7 @@ export async function zodValidation(env: Record<string, string>, schema: ZodSche
 
     // Handle undefined aka optional results
     if (typeof result.data === 'undefined') {
+      // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
       delete process.env[key]
       continue
     }

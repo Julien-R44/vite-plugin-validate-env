@@ -25,8 +25,8 @@
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "require": "./dist/index.cjs",
-      "import": "./dist/index.mjs"
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.cjs"
     }
   },
   "publishConfig": {
@@ -79,13 +79,13 @@
     "@japa/assert": "^1.4.1",
     "@japa/runner": "^2.5.1",
     "@japa/spec-reporter": "^1.3.3",
-    "@julr/eslint-config": "^0.3.2",
+    "@julr/tooling-configs": "^2.0.0",
     "@poppinss/dev-utils": "^2.0.3",
     "@types/node": "^20.9.2",
     "bumpp": "^9.2.0",
     "cross-env": "^7.0.3",
     "eslint": "^8.54.0",
-    "prettier": "^2.8.8",
+    "prettier": "^3.1.0",
     "rimraf": "^5.0.5",
     "ts-node": "^10.9.1",
     "typescript": "^5.3.2",
@@ -102,20 +102,5 @@
       ]
     }
   },
-  "eslintConfig": {
-    "extends": "@julr",
-    "rules": {
-      "n/no-unsupported-features/es-syntax": "off"
-    }
-  },
-  "prettier": {
-    "trailingComma": "es5",
-    "semi": false,
-    "singleQuote": true,
-    "useTabs": false,
-    "quoteProps": "consistent",
-    "bracketSpacing": true,
-    "arrowParens": "always",
-    "printWidth": 100
-  }
+  "prettier": "@julr/tooling-configs/prettier"
 }

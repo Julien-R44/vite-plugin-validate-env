@@ -1,16 +1,13 @@
-/* eslint-disable @typescript-eslint/prefer-ts-expect-error */
-/* eslint-disable @typescript-eslint/ban-ts-comment */
-/* eslint-disable sonarjs/no-duplicate-string */
-
-import { join } from 'path'
+import { join } from 'node:path'
 import { test } from '@japa/runner'
-import { fileURLToPath  } from 'url'
+import { fileURLToPath } from 'node:url'
 import { Filesystem } from '@poppinss/dev-utils'
+
 import { Schema, ValidateEnv } from '../src/index.js'
 
-const __dirname = fileURLToPath(new URL('.', import.meta.url));
+const dirname = fileURLToPath(new URL('.', import.meta.url))
 
-const fs = new Filesystem(join(__dirname, 'fixtures'))
+const fs = new Filesystem(join(dirname, 'fixtures'))
 const viteConfig = { root: fs.basePath }
 const viteEnvConfig = { mode: 'development', command: 'serve' } as const
 
@@ -101,7 +98,7 @@ test.group('vite-plugin-validate-env', (group) => {
         VITE_TEST: () => {
           throw new Error('Error validating')
         }
-    }`
+    }`,
     )
 
     try {
@@ -135,7 +132,7 @@ test.group('vite-plugin-validate-env', (group) => {
     } catch (error: any) {
       assert.include(
         error.message,
-        'Value for environment variable "CUSTOM_TEST" must be a boolean, instead received "not boolean"'
+        'Value for environment variable "CUSTOM_TEST" must be a boolean, instead received "not boolean"',
       )
     }
   })
@@ -185,7 +182,7 @@ test.group('vite-plugin-validate-env', (group) => {
     } catch (error: any) {
       assert.include(
         error.message,
-        'Value for environment variable "VITE_OPTIONAL" must be numeric, instead received'
+        'Value for environment variable "VITE_OPTIONAL" must be numeric, instead received',
       )
     }
 

@@ -27,6 +27,7 @@ export function builtinValidation(env: Record<string, string>, schema: PoppinsSc
 
       // Handle undefined aka optional results
       if (typeof res === 'undefined') {
+        // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
         delete process.env[key]
         continue
       }

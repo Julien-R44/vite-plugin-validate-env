@@ -1,16 +1,14 @@
-/* eslint-disable @typescript-eslint/prefer-ts-expect-error */
-/* eslint-disable @typescript-eslint/ban-ts-comment */
-
-import { join } from 'path'
 import { z } from 'zod'
+import { join } from 'node:path'
 import { test } from '@japa/runner'
-import { fileURLToPath  } from 'url'
+import { fileURLToPath } from 'node:url'
 import { Filesystem } from '@poppinss/dev-utils'
+
 import { ValidateEnv } from '../src/index.js'
 
-const __dirname = fileURLToPath(new URL('.', import.meta.url));
+const dirname = fileURLToPath(new URL('.', import.meta.url))
 
-const fs = new Filesystem(join(__dirname, 'fixtures'))
+const fs = new Filesystem(join(dirname, 'fixtures'))
 const viteConfig = { root: fs.basePath }
 const viteEnvConfig = { mode: 'development', command: 'serve' } as const
 
@@ -137,7 +135,7 @@ test.group('Zod validation adaptater', (group) => {
     } catch (error: any) {
       assert.include(
         error.message,
-        'Invalid value for "VITE_OPTIONAL_ZOD" : String must contain at most 2 character(s)'
+        'Invalid value for "VITE_OPTIONAL_ZOD" : String must contain at most 2 character(s)',
       )
     }
 

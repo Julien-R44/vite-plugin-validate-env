@@ -41,8 +41,8 @@ type EnvSchema<UserOptions extends PluginOptions> = UserOptions extends { schema
 type EnvValue<Fn> = Fn extends (...args: any) => any
   ? ReturnType<Fn>
   : Fn extends z.ZodType
-  ? z.infer<Fn>
-  : never
+    ? z.infer<Fn>
+    : never
 
 /**
  * Augment the import.meta.env object with the values returned by the schema validator

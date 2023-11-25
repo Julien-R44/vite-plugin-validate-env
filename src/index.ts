@@ -1,9 +1,10 @@
-import { cwd } from 'process'
 import path from 'node:path'
-import { type ConfigEnv, type Plugin, type UserConfig, loadEnv, normalizePath } from 'vite'
+import { cwd } from 'node:process'
 import { createConfigLoader as createLoader } from 'unconfig'
-import { builtinValidation } from './validators/builtin/index.js'
+import { type ConfigEnv, type Plugin, type UserConfig, loadEnv, normalizePath } from 'vite'
+
 import { zodValidation } from './validators/zod/index.js'
+import { builtinValidation } from './validators/builtin/index.js'
 import type { FullPluginOptions, PluginOptions, Schema } from './contracts/index.js'
 
 /**
@@ -49,7 +50,7 @@ async function validateEnv(userConfig: UserConfig, envConfig: ConfigEnv, options
   const rootDir = userConfig.root || cwd()
 
   const resolvedRoot = normalizePath(
-    userConfig.root ? path.resolve(userConfig.root) : process.cwd()
+    userConfig.root ? path.resolve(userConfig.root) : process.cwd(),
   )
 
   const envDir = userConfig.envDir
