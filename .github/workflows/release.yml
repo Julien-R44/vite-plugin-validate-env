@@ -9,18 +9,19 @@ jobs:
   release:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - name: Install pnpm
-        uses: pnpm/action-setup@v2
-
-      - name: Set node
+      - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 16.x
-          cache: pnpm
+          node-version: 21
+
+      - name: Install pnpm
+        run: |
+          corepack enable
+          corepack prepare pnpm@latest --activate
 
       - run: npx changelogithub
         env:
