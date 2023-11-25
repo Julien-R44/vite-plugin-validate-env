@@ -138,7 +138,7 @@ export default defineConfig({
 
 Beware, there are some limitations if you use Zod. For example, you can't use a boolean or number type directly. Because everything that comes from your `.env` file is a string by default.
 
-So to validate a boolean you must use `preprocess`, and `transform`, like this:
+So to validate other types than string you must use `preprocess`, and `transform`, like this:
 ```ts
 // env.ts
 import { defineConfig } from '@julr/vite-plugin-validate-env'
@@ -147,8 +147,21 @@ import { z } from 'zod'
 export default defineConfig({
   validator: 'zod',
   schema: {
+    // This will transform the string 'true' or '1' to a boolean
     VITE_BOOLEAN_VARIABLE: z
-      .preprocess((value) => value === 'true' || value === '1', z.boolean())
+      .preprocess((value) => value === 'true' || value === '1', z.boolean()),
+
+    // Will convert the string to a number
+    VITE_NUMBER: z.preprocess((value) => Number(value), z.number()),
+
+    // Will parse the string to an object
+    VITE_OBJECT: z.preprocess(
+      (value) => JSON.parse(value as string),
+      z.object({
+        a: z.string(),
+        b: z.number(),
+      }),
+    ),
   }
 })
 ```
