@@ -3,7 +3,7 @@ import { cwd } from 'node:process'
 import { createConfigLoader as createLoader } from 'unconfig'
 import { type ConfigEnv, type Plugin, type UserConfig, loadEnv, normalizePath } from 'vite'
 
-import { colors } from './utils/colors.js'
+import { ui } from './utils/cliui.js'
 import { zodValidation } from './validators/zod/index.js'
 import { builtinValidation } from './validators/builtin/index.js'
 import type { FullPluginOptions, PluginOptions, Schema } from './contracts/index.js'
@@ -45,6 +45,19 @@ function getNormalizedOptions(options: PluginOptions) {
 }
 
 /**
+ * Log environment variables
+ */
+function logVariables(schema: Schema) {
+  for (const key of Object.keys(schema)) {
+    ui.logger.log(`${ui.colors.green(`[${key}]`)}\n  ${process.env[key]}`)
+  }
+}
+
+function shouldLogVariables(options: PluginOptions) {
+  return 'debug' in options && options.debug === true
+}
+
+/**
  * Main function. Will call each validator defined in the schema and throw an error if any of them fails.
  */
 async function validateEnv(userConfig: UserConfig, envConfig: ConfigEnv, options?: PluginOptions) {
@@ -81,12 +94,7 @@ async function validateEnv(userConfig: UserConfig, envConfig: ConfigEnv, options
 
   const variables = await validatorFn(env, schema as any)
 
-  if ('debug' in options && options.debug === true) {
-    for (const key of Object.keys(schema)) {
-      console.log(`${colors.green(`[${key}]`)}\n  ${process.env[key]}`)
-    }
-    console.log('')
-  }
+  if (shouldLogVariables(options)) logVariables(schema)
 
   return {
     define: variables.reduce(

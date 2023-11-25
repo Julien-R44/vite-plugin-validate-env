@@ -1,15 +1,15 @@
-import { colors } from '../../utils/colors.js'
+import { ui } from '../../utils/cliui.js'
 import type { PoppinsSchema } from '../../contracts/index.js'
 
 export function errorReporter(errors: any[]) {
-  let finalMessage = colors.red('Failed to validate environment variables : \n')
+  let finalMessage = ui.colors.red('Failed to validate environment variables : \n')
 
   for (const error of errors) {
-    const errorKey = `[${colors.magenta(error.key)}]`
+    const errorKey = `[${ui.colors.magenta(error.key)}]`
     finalMessage += `\n${errorKey}: \n`
 
     const message = error.err.message.replace(`${error.err.code}: `, '')
-    finalMessage += `  ${colors.yellow(message)} \n`
+    finalMessage += `  ${ui.colors.yellow(message)} \n`
   }
 
   return finalMessage as string
