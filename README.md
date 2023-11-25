@@ -7,10 +7,10 @@ This Vite plugin allows you to validate your environment variables at build or d
 No more CI to restart because you are missing an environment variable, or to realize after 10 minutes of debugging that you forgot a variable 🥲
 
 ## Features
-- Validate your environment variables at build time. No runtime overhead
+- Validate your environment variables at **build time only**. No runtime overhead
 - Totally type-safe
 - Support multiple validation librairies ( [Zod](https://zod.dev/), and [@poppinss/validator-lite](https://github.com/poppinss/validator-lite/) )
-- Parsing, validation, transformation
+- Parsing, validation and transformation of your variables
 - Custom rules and error messages
 
 ## Installation
