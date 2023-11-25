@@ -77,9 +77,9 @@
   },
   "devDependencies": {
     "@japa/assert": "^2.0.1",
+    "@japa/file-system": "^2.0.1",
     "@japa/runner": "^3.1.0",
     "@julr/tooling-configs": "^2.0.0",
-    "@poppinss/dev-utils": "^2.0.3",
     "@types/node": "^20.10.0",
     "bumpp": "^9.2.0",
     "cross-env": "^7.0.3",

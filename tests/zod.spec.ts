@@ -1,25 +1,14 @@
 import { z } from 'zod'
-import { join } from 'node:path'
 import { test } from '@japa/runner'
-import { fileURLToPath } from 'node:url'
-import { Filesystem } from '@poppinss/dev-utils'
 
 import { ValidateEnv } from '../src/index.js'
 
-const dirname = fileURLToPath(new URL('.', import.meta.url))
-
-const fs = new Filesystem(join(dirname, 'fixtures'))
-const viteConfig = { root: fs.basePath }
 const viteEnvConfig = { mode: 'development', command: 'serve' } as const
 
 const ENV_FILENAME = '.env.development'
 
-test.group('Zod validation adaptater', (group) => {
-  group.each.teardown(async () => {
-    await fs.cleanup()
-  })
-
-  test('Basic', async ({ assert }) => {
+test.group('Zod validation adaptater', () => {
+  test('Basic', async ({ assert, fs }) => {
     assert.plan(1)
 
     const plugin = ValidateEnv({
@@ -27,17 +16,17 @@ test.group('Zod validation adaptater', (group) => {
       schema: { VITE_TEST: z.string().url().max(10) },
     })
 
-    await fs.add(ENV_FILENAME, 'VITE_TEST=htest')
+    await fs.create(ENV_FILENAME, 'VITE_TEST=htest')
 
     try {
       // @ts-ignore
-      await plugin.config(viteConfig, viteEnvConfig)
+      await plugin.config({ root: fs.basePath }, viteEnvConfig)
     } catch (error: any) {
       assert.include(error.message, 'Invalid value for "VITE_TEST" : Invalid url')
     }
   })
 
-  test('Transform value', async ({ assert }) => {
+  test('Transform value', async ({ assert, fs }) => {
     const plugin = ValidateEnv({
       validator: 'zod',
       schema: {
@@ -48,14 +37,14 @@ test.group('Zod validation adaptater', (group) => {
       },
     })
 
-    await fs.add(ENV_FILENAME, 'VITE_TEST=hello')
+    await fs.create(ENV_FILENAME, 'VITE_TEST=hello')
 
     // @ts-expect-error - 'config' is the handler
-    await plugin.config!(viteConfig, viteEnvConfig)
+    await plugin.config!({ root: fs.basePath }, viteEnvConfig)
     assert.equal(process.env.VITE_TEST, 'HELLO')
   })
 
-  test('Custom error message', async ({ assert }) => {
+  test('Custom error message', async ({ assert, fs }) => {
     assert.plan(1)
 
     const plugin = ValidateEnv({
@@ -65,17 +54,17 @@ test.group('Zod validation adaptater', (group) => {
       },
     })
 
-    await fs.add(ENV_FILENAME, 'VITE_LONG_STRING=superlongstring')
+    await fs.create(ENV_FILENAME, 'VITE_LONG_STRING=superlongstring')
 
     try {
       // @ts-ignore
-      await plugin.config(viteConfig, viteEnvConfig)
+      await plugin.config({ root: fs.basePath }, viteEnvConfig)
     } catch (error: any) {
       assert.include(error.message, 'Invalid value for "VITE_LONG_STRING" : Max 10 characters')
     }
   })
 
-  test('Refine value', async ({ assert }) => {
+  test('Refine value', async ({ assert, fs }) => {
     assert.plan(1)
 
     const plugin = ValidateEnv({
@@ -87,17 +76,17 @@ test.group('Zod validation adaptater', (group) => {
       },
     })
 
-    await fs.add(ENV_FILENAME, 'VITE_REFINED=superlongstring')
+    await fs.create(ENV_FILENAME, 'VITE_REFINED=superlongstring')
 
     try {
       // @ts-ignore
-      await plugin.config(viteConfig, viteEnvConfig)
+      await plugin.config({ root: fs.basePath }, viteEnvConfig)
     } catch (error: any) {
       assert.include(error.message, 'Invalid value for "VITE_REFINED" : Max 10 characters')
     }
   })
 
-  test('Display multiple errors', async ({ assert }) => {
+  test('Display multiple errors', async ({ assert, fs }) => {
     assert.plan(2)
 
     const plugin = ValidateEnv({
@@ -108,18 +97,18 @@ test.group('Zod validation adaptater', (group) => {
       },
     })
 
-    await fs.add(ENV_FILENAME, '')
+    await fs.create(ENV_FILENAME, '')
 
     try {
       // @ts-ignore
-      await plugin.config(viteConfig, viteEnvConfig)
+      await plugin.config({ root: fs.basePath }, viteEnvConfig)
     } catch (error: any) {
       assert.include(error.message, 'Invalid value for "VITE_A" : Required')
       assert.include(error.message, 'Invalid value for "VITE_B" : Required')
     }
   })
 
-  test('Optional Variables', async ({ assert }) => {
+  test('Optional Variables', async ({ assert, fs }) => {
     assert.plan(2)
 
     const plugin = ValidateEnv({
@@ -128,10 +117,10 @@ test.group('Zod validation adaptater', (group) => {
     })
 
     // Test with the variable set, but invalid
-    await fs.add(ENV_FILENAME, 'VITE_OPTIONAL_ZOD=hello')
+    await fs.create(ENV_FILENAME, 'VITE_OPTIONAL_ZOD=hello')
     try {
       // @ts-ignore
-      await plugin.config(viteConfig, viteEnvConfig)
+      await plugin.config({ root: fs.basePath }, viteEnvConfig)
     } catch (error: any) {
       assert.include(
         error.message,
@@ -140,13 +129,13 @@ test.group('Zod validation adaptater', (group) => {
     }
 
     // Test without variable
-    await fs.add(ENV_FILENAME, '')
+    await fs.create(ENV_FILENAME, '')
     // @ts-ignore
-    await plugin.config(viteConfig, viteEnvConfig)
+    await plugin.config({ root: fs.basePath }, viteEnvConfig)
     assert.equal(process.env.VITE_OPTIONAL_ZOD, undefined)
   })
 
-  test('dont stop validation after undefined result', async ({ assert }) => {
+  test('dont stop validation after undefined result', async ({ assert, fs }) => {
     assert.plan(2)
 
     const plugin = ValidateEnv({
@@ -157,9 +146,9 @@ test.group('Zod validation adaptater', (group) => {
       },
     })
 
-    await fs.add(ENV_FILENAME, 'VITE_MY_VAR=hello')
+    await fs.create(ENV_FILENAME, 'VITE_MY_VAR=hello')
     // @ts-ignore
-    await plugin.config(viteConfig, viteEnvConfig)
+    await plugin.config({ root: fs.basePath }, viteEnvConfig)
 
     assert.equal(process.env.VITE_OPTIONAL_ZOD, undefined)
     assert.equal(process.env.VITE_MY_VAR, 'hello')
