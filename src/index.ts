@@ -47,9 +47,11 @@ function getNormalizedOptions(options: PluginOptions) {
 /**
  * Log environment variables
  */
-function logVariables(schema: Schema) {
-  for (const key of Object.keys(schema)) {
-    ui.logger.log(`${ui.colors.green(`[${key}]`)}\n  ${process.env[key]}`)
+function logVariables(schema: Schema, env: Record<string, string>) {
+  ui.logger.log(`${ui.colors.cyan('[vite-plugin-validate-env]')} debug process.env content`)
+
+  for (const [key] of Object.entries(schema)) {
+    ui.logger.log(`${ui.icons.pointer} ${ui.colors.cyan(key)}: ${env[key]}`)
   }
 }
 
@@ -94,7 +96,7 @@ async function validateEnv(userConfig: UserConfig, envConfig: ConfigEnv, options
 
   const variables = await validatorFn(env, schema as any)
 
-  if (shouldLogVariables(options)) logVariables(schema)
+  if (shouldLogVariables(options)) logVariables(schema, env)
 
   return {
     define: variables.reduce(
