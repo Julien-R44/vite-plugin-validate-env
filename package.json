@@ -1,5 +1,6 @@
 {
   "name": "@julr/vite-plugin-validate-env",
+  "type": "module",
   "version": "0.2.5",
   "description": "✅ Vite plugin for validating your environment variables",
   "author": "Julien Ripouteau <julien@ripouteau.com>",
@@ -51,13 +52,14 @@
   "scripts": {
     "build": "rimraf dist && unbuild",
     "dev": "unbuild --stub",
-    "lint": "eslint . --ext=.ts",
+    "lint": "eslint .",
     "format": "prettier --write .",
     "prepublishOnly": "pnpm build",
     "release": "bumpp --commit --push --tag && pnpm publish",
     "start": "node --loader=ts-node/esm src/index.ts",
-    "test": "cross-env NODE_ENV=testing ts-node bin/test.ts",
-    "typecheck": "tsc --noEmit"
+    "test": "cross-env NODE_ENV=testing node --loader ts-node/esm bin/test.ts",
+    "typecheck": "tsc --noEmit",
+    "checks": "pnpm lint && pnpm typecheck"
   },
   "peerDependencies": {
     "vite": "^2.9.0 || ^3.0.0-0 || ^4.0.0 || ^5.0.0",

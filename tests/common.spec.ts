@@ -4,8 +4,11 @@
 
 import { join } from 'path'
 import { test } from '@japa/runner'
+import { fileURLToPath  } from 'url'
 import { Filesystem } from '@poppinss/dev-utils'
-import { Schema, ValidateEnv } from '../src'
+import { Schema, ValidateEnv } from '../src/index.js'
+
+const __dirname = fileURLToPath(new URL('.', import.meta.url));
 
 const fs = new Filesystem(join(__dirname, 'fixtures'))
 const viteConfig = { root: fs.basePath }

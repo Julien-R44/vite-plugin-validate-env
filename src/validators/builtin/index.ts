@@ -1,5 +1,5 @@
-import { colors } from '../../utils/colors'
-import type { PoppinsSchema } from '../../contracts'
+import { colors } from '../../utils/colors.js'
+import type { PoppinsSchema } from '../../contracts/index.js'
 
 export function errorReporter(errors: any[]) {
   let finalMessage = colors.red('Failed to validate environment variables : \n')

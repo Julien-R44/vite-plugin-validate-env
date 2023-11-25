@@ -5,9 +5,9 @@
 
   "compilerOptions": {
     "target": "es2020",
-    "module": "CommonJS",
+    "module": "NodeNext",
     "lib": ["esnext"],
-    "moduleResolution": "node",
+    "moduleResolution": "NodeNext",
     "esModuleInterop": true,
     "strict": true,
     "strictNullChecks": true,

@@ -1,4 +1,4 @@
-import { colors } from '../../utils/colors'
+import { colors } from '../../utils/colors.js'
 import type { ZodSchema } from 'zod'
 
 export function errorReporter(errors: any[]) {
