@@ -40,8 +40,8 @@ test.group('Zod validation adaptater', () => {
     await fs.create(ENV_FILENAME, 'VITE_TEST=hello')
 
     // @ts-expect-error - 'config' is the handler
-    await plugin.config!({ root: fs.basePath }, viteEnvConfig)
-    assert.equal(process.env.VITE_TEST, 'HELLO')
+    const { define } = await plugin.config!({ root: fs.basePath }, viteEnvConfig)
+    assert.equal(define['import.meta.env.VITE_TEST'], '"HELLO"')
   })
 
   test('Custom error message', async ({ assert, fs }) => {
@@ -148,9 +148,45 @@ test.group('Zod validation adaptater', () => {
 
     await fs.create(ENV_FILENAME, 'VITE_MY_VAR=hello')
     // @ts-ignore
-    await plugin.config({ root: fs.basePath }, viteEnvConfig)
+    const { define } = await plugin.config({ root: fs.basePath }, viteEnvConfig)
 
-    assert.equal(process.env.VITE_OPTIONAL_ZOD, undefined)
-    assert.equal(process.env.VITE_MY_VAR, 'hello')
+    assert.equal(define['import.meta.env.VITE_OPTIONAL_ZOD'], undefined)
+    assert.equal(define['import.meta.env.VITE_MY_VAR'], '"hello"')
+  })
+
+  test('number value', async ({ assert, fs }) => {
+    assert.plan(1)
+
+    const plugin = ValidateEnv({
+      validator: 'zod',
+      schema: { VITE_NUMBER: z.preprocess((value) => Number(value), z.number()) },
+    })
+
+    await fs.create(ENV_FILENAME, 'VITE_NUMBER=4323')
+
+    // @ts-ignore
+    const { define } = await plugin.config({ root: fs.basePath }, viteEnvConfig)
+    assert.equal(define['import.meta.env.VITE_NUMBER'], '4323')
+  })
+
+  test('boolean value', async ({ assert, fs }) => {
+    assert.plan(2)
+
+    const plugin = ValidateEnv({
+      validator: 'zod',
+      schema: {
+        VITE_BOOLEAN: z.preprocess((value) => value === 'true' || value === '1', z.boolean()),
+      },
+    })
+
+    await fs.create(ENV_FILENAME, 'VITE_BOOLEAN=true')
+    // @ts-ignore
+    const { define } = await plugin.config({ root: fs.basePath }, viteEnvConfig)
+    assert.equal(define['import.meta.env.VITE_BOOLEAN'], 'true')
+
+    await fs.create(ENV_FILENAME, 'VITE_BOOLEAN=1')
+    // @ts-ignore
+    const { define: define2 } = await plugin.config({ root: fs.basePath }, viteEnvConfig)
+    assert.equal(define2['import.meta.env.VITE_BOOLEAN'], 'true')
   })
 })

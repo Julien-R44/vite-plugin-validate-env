@@ -20,19 +20,16 @@ export function errorReporter(errors: any[]) {
  */
 export function builtinValidation(env: Record<string, string>, schema: PoppinsSchema) {
   const errors = []
+  const variables = []
 
   for (const [key, validator] of Object.entries(schema!)) {
     try {
       const res = validator(key, env[key])
 
       // Handle undefined aka optional results
-      if (typeof res === 'undefined') {
-        // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
-        delete process.env[key]
-        continue
-      }
+      if (typeof res === 'undefined') continue
 
-      process.env[key] = res
+      variables.push({ key, value: res })
     } catch (err) {
       errors.push({ key, err })
     }
@@ -41,4 +38,6 @@ export function builtinValidation(env: Record<string, string>, schema: PoppinsSc
   if (errors.length) {
     throw new Error(errorReporter(errors))
   }
+
+  return variables
 }

@@ -71,8 +71,9 @@ test.group('vite-plugin-validate-env', () => {
     await fs.create(`.env.development`, `VITE_URL_TRAILING=test.com`)
 
     // @ts-ignore
-    await plugin.config!({ root: fs.basePath }, viteEnvConfig)
-    assert.equal(process.env.VITE_URL_TRAILING, 'test.com/')
+    const { define } = await plugin.config!({ root: fs.basePath }, viteEnvConfig)
+
+    assert.deepEqual(define['import.meta.env.VITE_URL_TRAILING'], '"test.com/"')
   })
 
   test('Dedicated config file', async ({ assert, fs }) => {
@@ -134,9 +135,12 @@ test.group('vite-plugin-validate-env', () => {
     await fs.create(`./env-directory/.env.development`, `VITE_XXX=bonjour`)
 
     // @ts-ignore
-    await plugin.config({ root: fs.basePath, envDir: './env-directory' }, viteEnvConfig)
+    const { define } = await plugin.config(
+      { root: fs.basePath, envDir: './env-directory' },
+      viteEnvConfig,
+    )
 
-    assert.equal(process.env.VITE_XXX, 'bonjour')
+    assert.deepEqual(define['import.meta.env.VITE_XXX'], '"bonjour"')
   })
 
   test('Display multiple errors', async ({ assert, fs }) => {
@@ -195,9 +199,37 @@ test.group('vite-plugin-validate-env', () => {
 
     await fs.create('.env.development', 'VITE_MY_VAR=hello')
     // @ts-ignore
-    await plugin.config({ root: fs.basePath }, viteEnvConfig)
+    const { define } = await plugin.config({ root: fs.basePath }, viteEnvConfig)
 
-    assert.equal(process.env.VITE_OPTIONAL, undefined)
-    assert.equal(process.env.VITE_MY_VAR, 'hello')
+    assert.equal(define['import.meta.env.VITE_OPTIONAL'], undefined)
+    assert.equal(define['import.meta.env.VITE_MY_VAR'], '"hello"')
+  })
+
+  test('number value', async ({ assert, fs }) => {
+    const plugin = ValidateEnv({
+      validator: 'builtin',
+      schema: { VITE_NUMBER: Schema.number() },
+    })
+
+    await fs.create('.env.development', 'VITE_NUMBER=43')
+
+    // @ts-ignore
+    const { define } = await plugin.config({ root: fs.basePath }, viteEnvConfig)
+
+    assert.deepEqual(define['import.meta.env.VITE_NUMBER'], '43')
+  })
+
+  test('boolean value', async ({ assert, fs }) => {
+    const plugin = ValidateEnv({
+      validator: 'builtin',
+      schema: { VITE_BOOLEAN: Schema.boolean() },
+    })
+
+    await fs.create('.env.development', 'VITE_BOOLEAN=true')
+
+    // @ts-ignore
+    const { define } = await plugin.config({ root: fs.basePath }, viteEnvConfig)
+
+    assert.deepEqual(define['import.meta.env.VITE_BOOLEAN'], 'true')
   })
 })

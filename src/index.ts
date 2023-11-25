@@ -78,7 +78,17 @@ async function validateEnv(userConfig: UserConfig, envConfig: ConfigEnv, options
     throw new Error(`Invalid validator "${validator}"`)
   }
 
-  await validatorFn(env, schema as any)
+  const variables = await validatorFn(env, schema as any)
+
+  return {
+    define: variables.reduce(
+      (acc, { key, value }) => {
+        acc[`import.meta.env.${key}`] = JSON.stringify(value)
+        return acc
+      },
+      {} as Record<string, unknown>,
+    ),
+  }
 }
 
 /**
