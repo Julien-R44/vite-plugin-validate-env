@@ -94,9 +94,9 @@ async function validateEnv(userConfig: UserConfig, envConfig: ConfigEnv, options
     throw new Error(`Invalid validator "${validator}"`)
   }
 
-  const variables = await validatorFn(env, schema as any)
-
   if (shouldLogVariables(options)) logVariables(schema, env)
+
+  const variables = await validatorFn(env, schema as any)
 
   return {
     define: variables.reduce(
