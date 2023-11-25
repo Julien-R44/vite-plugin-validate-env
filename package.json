@@ -57,8 +57,8 @@
     "prepublishOnly": "pnpm build",
     "release": "bumpp --commit --push --tag && pnpm publish",
     "dev:playground": "pnpm vite -c playground/vite.config.ts",
-    "quick:test": "node --loader ts-node/esm bin/test.ts",
-    "test": "node --loader ts-node/esm bin/test.ts",
+    "quick:test": "node --enable-source-maps --loader ts-node/esm bin/test.ts",
+    "test": "node --enable-source-maps --loader ts-node/esm bin/test.ts",
     "typecheck": "tsc --noEmit",
     "checks": "pnpm lint && pnpm typecheck"
   },

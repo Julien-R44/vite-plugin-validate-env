@@ -1,8 +1,12 @@
+/* eslint-disable @typescript-eslint/prefer-ts-expect-error */
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/no-unused-vars */
+
+// @ts-ignore
 import { z } from 'zod'
 import { defineConfig } from 'vite'
 
-// @ts-expect-error osef
+// @ts-ignore
 import { Schema, ValidateEnv } from '../src/index.js'
 
 export default defineConfig({

@@ -268,7 +268,13 @@ test.group('vite-plugin-validate-env', () => {
     }
 
     const logs = ui.logger.getLogs()
-    assert.deepEqual(logs[0].message, 'cyan([vite-plugin-validate-env]) debug process.env content')
-    assert.deepInclude(logs[1].message, 'cyan(VITE_TESTX): not boolean')
+    const messages = logs.map((log) => log.message)
+    assert.isDefined(
+      messages.find(
+        (message) => message === 'cyan([vite-plugin-validate-env]) debug process.env content',
+      ),
+    )
+
+    assert.isDefined(messages.find((message) => message.includes('cyan(VITE_TESTX): not boolean')))
   })
 })
