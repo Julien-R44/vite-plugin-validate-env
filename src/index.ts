@@ -81,7 +81,7 @@ async function validateEnv(userConfig: UserConfig, envConfig: ConfigEnv, options
 
   const variables = await validatorFn(env, schema as any)
 
-  if ('showOutput' in options && options.showOutput === true) {
+  if ('debug' in options && options.debug === true) {
     for (const key of Object.keys(schema)) {
       console.log(`${colors.green(`[${key}]`)}\n  ${process.env[key]}`)
     }
