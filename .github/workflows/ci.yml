@@ -52,7 +52,7 @@ jobs:
         run: pnpm install
 
       - name: Typecheck
-        run: pnpm typechec
+        run: pnpm typecheck
 
   test:
     runs-on: ubuntu-latest

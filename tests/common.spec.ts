@@ -254,24 +254,21 @@ test.group('vite-plugin-validate-env', () => {
   test('log variables even if validation is failing', async ({ assert, fs }) => {
     const plugin = ValidateEnv({
       validator: 'builtin',
-      schema: { VITE_BOOLEAN: Schema.boolean() },
+      schema: { VITE_TESTX: Schema.boolean() },
       debug: true,
     })
 
-    await fs.create('.env.development', 'VITE_BOOLEAN=not boolean')
+    await fs.create('.env.development', 'VITE_TESTX=not boolean')
 
     try {
       // @ts-ignore
       await plugin.config({ root: fs.basePath }, viteEnvConfig)
     } catch (error: any) {
-      assert.include(
-        error.message,
-        'Value for environment variable "VITE_BOOLEAN" must be a boolean',
-      )
+      assert.include(error.message, 'Value for environment variable "VITE_TESTX" must be a boolean')
     }
 
     const logs = ui.logger.getLogs()
     assert.deepEqual(logs[0].message, 'cyan([vite-plugin-validate-env]) debug process.env content')
-    assert.deepInclude(logs[1].message, 'cyan(VITE_BOOLEAN): not boolean')
+    assert.deepInclude(logs[1].message, 'cyan(VITE_TESTX): not boolean')
   })
 })
