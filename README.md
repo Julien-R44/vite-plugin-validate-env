@@ -56,6 +56,23 @@ export default defineConfig({
 })
 ```
 
+If you want to see what values are being evaluated for the build, for example when running in CI. You can pass the `debug` option as follows:
+```ts
+import { defineConfig } from "vite";
+import { Schema, ValidateEnv } from "@julr/vite-plugin-validate-env";
+
+export default defineConfig({
+  plugins: [
+    ValidateEnv({
+      debug: true,
+      schema: {
+        VITE_MY_VAR: Schema.string()
+      }
+    }),
+  ],
+})
+```
+
 ### Built-in validator
 
 ```ts

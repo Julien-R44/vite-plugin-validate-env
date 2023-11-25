@@ -3,6 +3,7 @@ import { cwd } from 'node:process'
 import { createConfigLoader as createLoader } from 'unconfig'
 import { type ConfigEnv, type Plugin, type UserConfig, loadEnv, normalizePath } from 'vite'
 
+import { ui } from './utils/cliui.js'
 import { zodValidation } from './validators/zod/index.js'
 import { builtinValidation } from './validators/builtin/index.js'
 import type { FullPluginOptions, PluginOptions, Schema } from './contracts/index.js'
@@ -44,6 +45,21 @@ function getNormalizedOptions(options: PluginOptions) {
 }
 
 /**
+ * Log environment variables
+ */
+function logVariables(schema: Schema, env: Record<string, string>) {
+  ui.logger.log(`${ui.colors.cyan('[vite-plugin-validate-env]')} debug process.env content`)
+
+  for (const [key] of Object.entries(schema)) {
+    ui.logger.log(`${ui.icons.pointer} ${ui.colors.cyan(key)}: ${env[key]}`)
+  }
+}
+
+function shouldLogVariables(options: PluginOptions) {
+  return 'debug' in options && options.debug === true
+}
+
+/**
  * Main function. Will call each validator defined in the schema and throw an error if any of them fails.
  */
 async function validateEnv(userConfig: UserConfig, envConfig: ConfigEnv, options?: PluginOptions) {
@@ -77,6 +93,8 @@ async function validateEnv(userConfig: UserConfig, envConfig: ConfigEnv, options
   if (!validatorFn) {
     throw new Error(`Invalid validator "${validator}"`)
   }
+
+  if (shouldLogVariables(options)) logVariables(schema, env)
 
   const variables = await validatorFn(env, schema as any)
 

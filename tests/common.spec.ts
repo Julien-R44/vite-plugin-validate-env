@@ -1,5 +1,6 @@
 import { test } from '@japa/runner'
 
+import { ui } from '../src/utils/cliui.js'
 import { Schema, ValidateEnv } from '../src/index.js'
 
 const viteEnvConfig = { mode: 'development', command: 'serve' } as const
@@ -231,5 +232,46 @@ test.group('vite-plugin-validate-env', () => {
     const { define } = await plugin.config({ root: fs.basePath }, viteEnvConfig)
 
     assert.deepEqual(define['import.meta.env.VITE_BOOLEAN'], 'true')
+  })
+
+  test('log variables when debug is enabled', async ({ assert, fs }) => {
+    const plugin = ValidateEnv({
+      validator: 'builtin',
+      schema: { VITE_BOOLEAN: Schema.boolean() },
+      debug: true,
+    })
+
+    await fs.create('.env.development', 'VITE_BOOLEAN=true')
+
+    // @ts-ignore
+    await plugin.config({ root: fs.basePath }, viteEnvConfig)
+
+    const logs = ui.logger.getLogs()
+    assert.deepEqual(logs[0].message, 'cyan([vite-plugin-validate-env]) debug process.env content')
+    assert.deepInclude(logs[1].message, 'cyan(VITE_BOOLEAN): true')
+  })
+
+  test('log variables even if validation is failing', async ({ assert, fs }) => {
+    const plugin = ValidateEnv({
+      validator: 'builtin',
+      schema: { VITE_BOOLEAN: Schema.boolean() },
+      debug: true,
+    })
+
+    await fs.create('.env.development', 'VITE_BOOLEAN=not boolean')
+
+    try {
+      // @ts-ignore
+      await plugin.config({ root: fs.basePath }, viteEnvConfig)
+    } catch (error: any) {
+      assert.include(
+        error.message,
+        'Value for environment variable "VITE_BOOLEAN" must be a boolean',
+      )
+    }
+
+    const logs = ui.logger.getLogs()
+    assert.deepEqual(logs[0].message, 'cyan([vite-plugin-validate-env]) debug process.env content')
+    assert.deepInclude(logs[1].message, 'cyan(VITE_BOOLEAN): not boolean')
   })
 })

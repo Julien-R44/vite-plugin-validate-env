@@ -72,7 +72,7 @@
     }
   },
   "dependencies": {
-    "@poppinss/colors": "^4.1.1",
+    "@poppinss/cliui": "^6.2.1",
     "@poppinss/validator-lite": "^1.0.3",
     "unconfig": "^0.3.11"
   },
