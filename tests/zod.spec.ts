@@ -1,11 +1,16 @@
 import { z } from 'zod'
 import { test } from '@japa/runner'
 
-import { ValidateEnv } from '../src/index.js'
+import type { UI } from '../src/utils/cliui.js'
+import { ValidateEnv as CoreTypedValidateEnv } from '../src/index.js'
 
 const viteEnvConfig = { mode: 'development', command: 'serve' } as const
 
 const ENV_FILENAME = '.env.development'
+
+const ValidateEnv = CoreTypedValidateEnv as (
+  ...args: Parameters<typeof CoreTypedValidateEnv>
+) => ReturnType<typeof CoreTypedValidateEnv> & { ui: UI }
 
 test.group('Zod validation adaptater', () => {
   test('Basic', async ({ assert, fs }) => {
@@ -188,5 +193,71 @@ test.group('Zod validation adaptater', () => {
     // @ts-ignore
     const { define: define2 } = await plugin.config({ root: fs.basePath }, viteEnvConfig)
     assert.equal(define2['import.meta.env.VITE_BOOLEAN'], 'true')
+  })
+
+  test('log variables when debug is enabled', async ({ assert, fs }) => {
+    const plugin = ValidateEnv({
+      validator: 'zod',
+      schema: {
+        VITE_BOOLEAN: z.preprocess((value) => value === 'true' || value === '1', z.boolean()),
+      },
+      debug: true,
+    })
+
+    await fs.create('.env.development', 'VITE_BOOLEAN=true')
+
+    // @ts-ignore
+    await plugin.config({ root: fs.basePath }, viteEnvConfig)
+
+    const logs = plugin.ui.logger.getLogs()
+    assert.deepEqual(logs[0].message, 'cyan([vite-plugin-validate-env]) debug process.env content')
+    assert.deepInclude(logs[1].message, 'cyan(VITE_BOOLEAN): true')
+  })
+
+  test('Optional Variables with Default', async ({ assert, fs }) => {
+    const plugin = ValidateEnv({
+      validator: 'zod',
+      schema: { VITE_OPTIONAL_ZOD: z.string().max(2).optional().default('d') },
+      debug: true,
+    })
+
+    // Test without variable
+    await fs.create(ENV_FILENAME, '')
+    // @ts-ignore
+    const { define } = await plugin.config({ root: fs.basePath }, viteEnvConfig)
+    assert.equal(define['import.meta.env.VITE_OPTIONAL_ZOD'], '"d"')
+    const logs = plugin.ui.logger.getLogs()
+    assert.deepEqual(logs[0].message, 'cyan([vite-plugin-validate-env]) debug process.env content')
+    assert.deepInclude(logs[1].message, 'cyan(VITE_OPTIONAL_ZOD): d')
+  })
+
+  test('log variables even if validation is failing', async ({ assert, fs }) => {
+    const plugin = ValidateEnv({
+      validator: 'zod',
+      schema: { VITE_TESTX: z.boolean() },
+      debug: true,
+    })
+
+    await fs.create('.env.development', 'VITE_TESTX=not boolean')
+
+    try {
+      // @ts-ignore
+      await plugin.config({ root: fs.basePath }, viteEnvConfig)
+    } catch (error: any) {
+      assert.include(
+        error.message,
+        'Invalid value for "VITE_TESTX" : Expected boolean, received string',
+      )
+    }
+
+    const logs = plugin.ui.logger.getLogs()
+    const messages = logs.map((log) => log.message)
+    assert.isDefined(
+      messages.find(
+        (message) => message === 'cyan([vite-plugin-validate-env]) debug process.env content',
+      ),
+    )
+
+    assert.isDefined(messages.find((message) => message.includes('cyan(VITE_TESTX): not boolean')))
   })
 })

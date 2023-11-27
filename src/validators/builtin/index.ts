@@ -1,7 +1,7 @@
-import { ui } from '../../utils/cliui.js'
+import type { UI } from '../../utils/cliui.js'
 import type { PoppinsSchema } from '../../contracts/index.js'
 
-export function errorReporter(errors: any[]) {
+export function errorReporter(ui: UI, errors: any[]) {
   let finalMessage = ui.colors.red('Failed to validate environment variables : \n')
 
   for (const error of errors) {
@@ -18,7 +18,7 @@ export function errorReporter(errors: any[]) {
 /**
  * Validate the env values with builtin validator
  */
-export function builtinValidation(env: Record<string, string>, schema: PoppinsSchema) {
+export function builtinValidation(ui: UI, env: Record<string, string>, schema: PoppinsSchema) {
   const errors = []
   const variables = []
 
@@ -36,7 +36,7 @@ export function builtinValidation(env: Record<string, string>, schema: PoppinsSc
   }
 
   if (errors.length) {
-    throw new Error(errorReporter(errors))
+    throw new Error(errorReporter(ui, errors))
   }
 
   return variables
