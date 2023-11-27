@@ -1,8 +1,8 @@
 import type { ZodSchema } from 'zod'
 
-import { ui } from '../../utils/cliui.js'
+import type { UI } from '../../utils/cliui.js'
 
-export function errorReporter(errors: any[]) {
+export function errorReporter(ui: UI, errors: any[]) {
   let finalMessage = ui.colors.red('Failed to validate environment variables : \n')
 
   for (const error of errors) {
@@ -19,7 +19,7 @@ export function errorReporter(errors: any[]) {
 /**
  * Validate the env values with Zod validator
  */
-export async function zodValidation(env: Record<string, string>, schema: ZodSchema) {
+export async function zodValidation(ui: UI, env: Record<string, string>, schema: ZodSchema) {
   const errors = []
   const variables = []
 
@@ -38,7 +38,7 @@ export async function zodValidation(env: Record<string, string>, schema: ZodSche
   }
 
   if (errors.length) {
-    throw new Error(errorReporter(errors))
+    throw new Error(errorReporter(ui, errors))
   }
 
   return variables

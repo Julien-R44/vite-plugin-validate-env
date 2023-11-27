@@ -3,7 +3,8 @@ import { cwd } from 'node:process'
 import { createConfigLoader as createLoader } from 'unconfig'
 import { type ConfigEnv, type Plugin, type UserConfig, loadEnv, normalizePath } from 'vite'
 
-import { ui } from './utils/cliui.js'
+import { initUi } from './utils/cliui.js'
+import type { UI } from './utils/cliui.js'
 import { zodValidation } from './validators/zod/index.js'
 import { builtinValidation } from './validators/builtin/index.js'
 import type { FullPluginOptions, PluginOptions, Schema } from './contracts/index.js'
@@ -47,11 +48,11 @@ function getNormalizedOptions(options: PluginOptions) {
 /**
  * Log environment variables
  */
-function logVariables(schema: Schema, env: Record<string, string>) {
+function logVariables(ui: UI, variables: { key: string; value: any }[]) {
   ui.logger.log(`${ui.colors.cyan('[vite-plugin-validate-env]')} debug process.env content`)
 
-  for (const [key] of Object.entries(schema)) {
-    ui.logger.log(`${ui.icons.pointer} ${ui.colors.cyan(key)}: ${env[key]}`)
+  for (const { key, value } of variables) {
+    ui.logger.log(`${ui.icons.pointer} ${ui.colors.cyan(key)}: ${value}`)
   }
 }
 
@@ -62,7 +63,12 @@ function shouldLogVariables(options: PluginOptions) {
 /**
  * Main function. Will call each validator defined in the schema and throw an error if any of them fails.
  */
-async function validateEnv(userConfig: UserConfig, envConfig: ConfigEnv, options?: PluginOptions) {
+async function validateEnv(
+  ui: UI,
+  userConfig: UserConfig,
+  envConfig: ConfigEnv,
+  options?: PluginOptions,
+) {
   const rootDir = userConfig.root || cwd()
 
   const resolvedRoot = normalizePath(
@@ -84,19 +90,7 @@ async function validateEnv(userConfig: UserConfig, envConfig: ConfigEnv, options
     throw new Error('Missing configuration for vite-plugin-validate-env')
   }
 
-  const { schema, validator } = getNormalizedOptions(options)
-  const validatorFn = {
-    builtin: builtinValidation,
-    zod: zodValidation,
-  }[validator]
-
-  if (!validatorFn) {
-    throw new Error(`Invalid validator "${validator}"`)
-  }
-
-  if (shouldLogVariables(options)) logVariables(schema, env)
-
-  const variables = await validatorFn(env, schema as any)
+  const variables = await validateAndLog(ui, env, options)
 
   return {
     define: variables.reduce(
@@ -109,13 +103,36 @@ async function validateEnv(userConfig: UserConfig, envConfig: ConfigEnv, options
   }
 }
 
+async function validateAndLog(ui: UI, env: ReturnType<typeof loadEnv>, options: PluginOptions) {
+  const { schema, validator } = getNormalizedOptions(options)
+  const showDebug = shouldLogVariables(options)
+  const validate = { zod: zodValidation, builtin: builtinValidation }[validator]
+  try {
+    const variables = await validate(ui, env, schema as any)
+    if (showDebug) logVariables(ui, variables)
+    return variables
+  } catch (error) {
+    if (showDebug)
+      logVariables(
+        ui,
+        Object.entries(schema).map(([key]) => ({ key, value: env[key] })),
+      )
+    throw error
+  }
+}
+
 /**
  * Validate environment variables against a schema
  */
-export const ValidateEnv = (options?: PluginOptions): Plugin => ({
-  name: 'vite-plugin-validate-env',
-  config: (config, env) => validateEnv(config, env, options),
-})
+export const ValidateEnv = (options?: PluginOptions): Plugin => {
+  const ui = initUi()
+  return {
+    // @ts-expect-error -- only used for testing as we need to keep each instance of the plugin unique to a test
+    ui: process.env.NODE_ENV === 'testing' ? ui : undefined,
+    name: 'vite-plugin-validate-env',
+    config: (config, env) => validateEnv(ui, config, env, options),
+  }
+}
 
 export const defineConfig = <T extends PluginOptions>(config: T): T => config
 

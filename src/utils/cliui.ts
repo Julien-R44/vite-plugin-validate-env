@@ -1,3 +1,7 @@
 import { cliui } from '@poppinss/cliui'
 
-export const ui = cliui({ mode: process.env.NODE_ENV === 'testing' ? 'raw' : 'normal' })
+export type UI = ReturnType<typeof initUi>
+
+export function initUi() {
+  return cliui({ mode: process.env.NODE_ENV === 'testing' ? 'raw' : 'normal' })
+}

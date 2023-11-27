@@ -1,9 +1,13 @@
 import { test } from '@japa/runner'
 
-import { ui } from '../src/utils/cliui.js'
-import { Schema, ValidateEnv } from '../src/index.js'
+import type { UI } from '../src/utils/cliui.js'
+import { Schema, ValidateEnv as CoreTypedValidateEnv } from '../src/index.js'
 
 const viteEnvConfig = { mode: 'development', command: 'serve' } as const
+
+const ValidateEnv = CoreTypedValidateEnv as (
+  ...args: Parameters<typeof CoreTypedValidateEnv>
+) => ReturnType<typeof CoreTypedValidateEnv> & { ui: UI }
 
 test.group('vite-plugin-validate-env', () => {
   test('Basic validation', async ({ assert, fs }) => {
@@ -246,7 +250,7 @@ test.group('vite-plugin-validate-env', () => {
     // @ts-ignore
     await plugin.config({ root: fs.basePath }, viteEnvConfig)
 
-    const logs = ui.logger.getLogs()
+    const logs = plugin.ui.logger.getLogs()
     assert.deepEqual(logs[0].message, 'cyan([vite-plugin-validate-env]) debug process.env content')
     assert.deepInclude(logs[1].message, 'cyan(VITE_BOOLEAN): true')
   })
@@ -267,7 +271,7 @@ test.group('vite-plugin-validate-env', () => {
       assert.include(error.message, 'Value for environment variable "VITE_TESTX" must be a boolean')
     }
 
-    const logs = ui.logger.getLogs()
+    const logs = plugin.ui.logger.getLogs()
     const messages = logs.map((log) => log.message)
     assert.isDefined(
       messages.find(
