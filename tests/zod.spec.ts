@@ -221,12 +221,13 @@ test.group('Zod validation adaptater', () => {
       debug: true,
     })
 
-    // Test without variable
     await fs.create(ENV_FILENAME, '')
+
     // @ts-ignore
     const { define } = await plugin.config({ root: fs.basePath }, viteEnvConfig)
-    assert.equal(define['import.meta.env.VITE_OPTIONAL_ZOD'], '"d"')
     const logs = plugin.ui.logger.getLogs()
+
+    assert.equal(define['import.meta.env.VITE_OPTIONAL_ZOD'], '"d"')
     assert.deepEqual(logs[0].message, 'cyan([vite-plugin-validate-env]) debug process.env content')
     assert.deepInclude(logs[1].message, 'cyan(VITE_OPTIONAL_ZOD): d')
   })
