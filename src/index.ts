@@ -3,8 +3,7 @@ import { cwd } from 'node:process'
 import { createConfigLoader as createLoader } from 'unconfig'
 import { type ConfigEnv, type Plugin, type UserConfig, loadEnv, normalizePath } from 'vite'
 
-import { initUi } from './ui.js'
-import type { UI } from './ui.js'
+import { initUi, type UI } from './ui.js'
 import { zodValidation } from './validators/zod/index.js'
 import { builtinValidation } from './validators/builtin/index.js'
 import type { FullPluginOptions, PluginOptions, Schema } from './types.js'
@@ -14,12 +13,7 @@ import type { FullPluginOptions, PluginOptions, Schema } from './types.js'
  */
 async function loadConfig(rootDir: string) {
   const loader = createLoader<PluginOptions>({
-    sources: [
-      {
-        files: 'env',
-        extensions: ['ts', 'cts', 'mts', 'js', 'cjs', 'mjs'],
-      },
-    ],
+    sources: [{ files: 'env', extensions: ['ts', 'cts', 'mts', 'js', 'cjs', 'mjs'] }],
     cwd: rootDir,
   })
 
@@ -107,16 +101,19 @@ async function validateAndLog(ui: UI, env: ReturnType<typeof loadEnv>, options: 
   const { schema, validator } = getNormalizedOptions(options)
   const showDebug = shouldLogVariables(options)
   const validate = { zod: zodValidation, builtin: builtinValidation }[validator]
+
   try {
     const variables = await validate(ui, env, schema as any)
+
     if (showDebug) logVariables(ui, variables)
+
     return variables
   } catch (error) {
-    if (showDebug)
-      logVariables(
-        ui,
-        Object.entries(schema).map(([key]) => ({ key, value: env[key] })),
-      )
+    if (showDebug) {
+      const variables = Object.entries(schema).map(([key]) => ({ key, value: env[key] }))
+      logVariables(ui, variables)
+    }
+
     throw error
   }
 }
@@ -127,7 +124,7 @@ async function validateAndLog(ui: UI, env: ReturnType<typeof loadEnv>, options: 
 export const ValidateEnv = (options?: PluginOptions): Plugin => {
   const ui = initUi()
   return {
-    // @ts-expect-error -- only used for testing as we need to keep each instance of the plugin unique to a test
+    // @ts-expect-error - only used for testing as we need to keep each instance of the plugin unique to a test
     ui: process.env.NODE_ENV === 'testing' ? ui : undefined,
     name: 'vite-plugin-validate-env',
     config: (config, env) => validateEnv(ui, config, env, options),
