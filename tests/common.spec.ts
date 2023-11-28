@@ -1,6 +1,6 @@
 import { test } from '@japa/runner'
 
-import type { UI } from '../src/utils/cliui.js'
+import type { UI } from '../src/ui.js'
 import { Schema, ValidateEnv as CoreTypedValidateEnv } from '../src/index.js'
 
 const viteEnvConfig = { mode: 'development', command: 'serve' } as const

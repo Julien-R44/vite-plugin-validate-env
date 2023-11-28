@@ -1,5 +1,5 @@
-import type { UI } from '../../utils/cliui.js'
-import type { PoppinsSchema } from '../../contracts/index.js'
+import type { UI } from '../../ui.js'
+import type { PoppinsSchema } from '../../types.js'
 
 export function errorReporter(ui: UI, errors: any[]) {
   let finalMessage = ui.colors.red('Failed to validate environment variables : \n')

@@ -3,11 +3,11 @@ import { cwd } from 'node:process'
 import { createConfigLoader as createLoader } from 'unconfig'
 import { type ConfigEnv, type Plugin, type UserConfig, loadEnv, normalizePath } from 'vite'
 
-import { initUi } from './utils/cliui.js'
-import type { UI } from './utils/cliui.js'
+import { initUi } from './ui.js'
+import type { UI } from './ui.js'
 import { zodValidation } from './validators/zod/index.js'
 import { builtinValidation } from './validators/builtin/index.js'
-import type { FullPluginOptions, PluginOptions, Schema } from './contracts/index.js'
+import type { FullPluginOptions, PluginOptions, Schema } from './types.js'
 
 /**
  * Load schema defined in `env.ts` file using unconfig
@@ -137,4 +137,4 @@ export const ValidateEnv = (options?: PluginOptions): Plugin => {
 export const defineConfig = <T extends PluginOptions>(config: T): T => config
 
 export { schema as Schema } from '@poppinss/validator-lite'
-export type { ImportMetaEnvAugmented } from './contracts/index.js'
+export type { ImportMetaEnvAugmented } from './types.js'

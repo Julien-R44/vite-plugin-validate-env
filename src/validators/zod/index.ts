@@ -1,6 +1,6 @@
 import type { ZodSchema } from 'zod'
 
-import type { UI } from '../../utils/cliui.js'
+import type { UI } from '../../ui.js'
 
 export function errorReporter(ui: UI, errors: any[]) {
   let finalMessage = ui.colors.red('Failed to validate environment variables : \n')
