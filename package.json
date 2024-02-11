@@ -72,26 +72,25 @@
     }
   },
   "dependencies": {
-    "@poppinss/cliui": "^6.2.1",
+    "@poppinss/cliui": "^6.3.0",
     "@poppinss/validator-lite": "^1.0.3",
     "unconfig": "^0.3.11"
   },
   "devDependencies": {
-    "@japa/assert": "^2.0.1",
-    "@japa/file-system": "^2.0.1",
-    "@japa/runner": "^3.1.0",
-    "@julr/tooling-configs": "^2.0.0",
-    "@types/node": "^20.10.0",
-    "bumpp": "^9.2.0",
+    "@japa/assert": "^2.1.0",
+    "@japa/file-system": "^2.2.0",
+    "@japa/runner": "^3.1.1",
+    "@julr/tooling-configs": "^2.1.0",
+    "@types/node": "^20.11.17",
+    "bumpp": "^9.3.0",
     "cross-env": "^7.0.3",
-    "eslint": "^8.54.0",
-    "prettier": "^3.1.0",
+    "eslint": "^8.56.0",
+    "prettier": "^3.2.5",
     "rimraf": "^5.0.5",
-    "ts-node": "^10.9.1",
-    "typescript": "^5.3.2",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.3.3",
     "unbuild": "^2.0.0",
-    "vite": "^5.0.2",
-    "vite-node": "^0.34.6",
+    "vite": "^5.1.1",
     "zod": "^3.22.4"
   },
   "pnpm": {
