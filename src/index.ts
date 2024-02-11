@@ -1,7 +1,7 @@
 import path from 'node:path'
 import { cwd } from 'node:process'
 import { createConfigLoader as createLoader } from 'unconfig'
-import { type ConfigEnv, type Plugin, type UserConfig, loadEnv, normalizePath } from 'vite'
+import { type ConfigEnv, type Plugin, type UserConfig } from 'vite'
 
 import { initUi, type UI } from './ui.js'
 import { zodValidation } from './validators/zod/index.js'
@@ -77,6 +77,12 @@ async function validateEnv(
   envConfig: ConfigEnv,
   inlineOptions?: PluginOptions,
 ) {
+  /**
+   * Dynamic import of Vite helpers to using the ESM build of Vite and
+   * avoiding CJS since it will be deprecated
+   * See : https://vitejs.dev/guide/troubleshooting.html#vite-cjs-node-api-deprecated
+   */
+  const { normalizePath, loadEnv } = await import('vite')
   const rootDir = userConfig.root || cwd()
 
   const resolvedRoot = normalizePath(
@@ -103,7 +109,7 @@ async function validateEnv(
   }
 }
 
-async function validateAndLog(ui: UI, env: ReturnType<typeof loadEnv>, options: PluginOptions) {
+async function validateAndLog(ui: UI, env: Record<string, string>, options: PluginOptions) {
   const { schema, validator } = getNormalizedOptions(options)
   const showDebug = shouldLogVariables(options)
   const validate = { zod: zodValidation, builtin: builtinValidation }[validator]
