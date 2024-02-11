@@ -191,6 +191,22 @@ export default defineConfig({
 })
 ```
 
+### Custom config file path
+
+By default, the plugin is looking for a file named `env.ts` at the root of your project. If you want to use a different file, you can specify the path to your file in the plugin options.
+
+```ts
+// vite.config.ts
+import { defineConfig } from 'vite'
+import { ValidateEnv } from "@julr/vite-plugin-validate-env";
+
+export default defineConfig({
+  plugins: [ValidateEnv({ envFile: 'config/env' })],
+})
+```
+
+This will look for a file named `env.ts` in the `config` folder at the root of your project. Make sure to not include the file extension in the path as the plugin will automatically search for `.js`, `.ts` and other valid file extensions.
+
 ## Transforming variables
 In addition to the validation of your variables, there is also a parsing that is done. This means that you can modify the value of an environment variable before it is injected. 
 

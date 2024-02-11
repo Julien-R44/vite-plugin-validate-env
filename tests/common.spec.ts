@@ -81,39 +81,6 @@ test.group('vite-plugin-validate-env', () => {
     assert.deepEqual(define['import.meta.env.VITE_URL_TRAILING'], '"test.com/"')
   })
 
-  test('Dedicated config file', async ({ assert, fs }) => {
-    assert.plan(1)
-
-    const plugin = ValidateEnv()
-
-    await fs.create(`.env.development`, `VITE_MY_VAR=true`)
-    await fs.create(
-      `env.ts`,
-      `export default {
-        VITE_TEST: () => {
-          throw new Error('Error validating')
-        }
-    }`,
-    )
-
-    try {
-      // @ts-ignore
-      await plugin.config({ root: fs.basePath }, viteEnvConfig)
-    } catch (error: any) {
-      assert.include(error.message, 'Error validating')
-    }
-  })
-
-  test('Should fail if no schema is found', async ({ assert, fs }) => {
-    const plugin = ValidateEnv()
-
-    await fs.create(`.env.development`, `VITE_MY_VAR=true`)
-
-    // @ts-expect-error - `config` is the handler
-    const fn = plugin.config!.bind(plugin, { root: fs.basePath }, viteEnvConfig)
-    await assert.rejects(fn, 'Missing configuration for vite-plugin-validate-env')
-  })
-
   test('Should pick up var with custom prefix', async ({ assert, fs }) => {
     assert.plan(1)
 

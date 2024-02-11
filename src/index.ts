@@ -11,14 +11,28 @@ import type { FullPluginOptions, PluginOptions, Schema } from './types.js'
 /**
  * Load schema defined in `env.ts` file using unconfig
  */
-async function loadConfig(rootDir: string) {
+async function loadOptions(rootDir: string, inlineConfig?: PluginOptions) {
+  let source = 'env'
+
+  /**
+   * If configFile is defined in the inlineConfig, use it as the source
+   */
+  if (inlineConfig && 'configFile' in inlineConfig && inlineConfig.configFile) {
+    source = inlineConfig.configFile
+  }
+
   const loader = createLoader<PluginOptions>({
-    sources: [{ files: 'env', extensions: ['ts', 'cts', 'mts', 'js', 'cjs', 'mjs'] }],
+    sources: [{ files: source, extensions: ['ts', 'cts', 'mts', 'js', 'cjs', 'mjs'] }],
     cwd: rootDir,
+    defaults: inlineConfig,
   })
 
   const result = await loader.load()
-  return result.config
+  const config = result.config
+
+  if (!config) throw new Error('Missing configuration for vite-plugin-validate-env')
+
+  return config
 }
 
 /**
@@ -61,7 +75,7 @@ async function validateEnv(
   ui: UI,
   userConfig: UserConfig,
   envConfig: ConfigEnv,
-  options?: PluginOptions,
+  inlineOptions?: PluginOptions,
 ) {
   const rootDir = userConfig.root || cwd()
 
@@ -75,15 +89,7 @@ async function validateEnv(
 
   const env = loadEnv(envConfig.mode, envDir, userConfig.envPrefix)
 
-  const isInlineConfig = options !== undefined
-  if (!isInlineConfig) {
-    options = await loadConfig(rootDir)
-  }
-
-  if (!options) {
-    throw new Error('Missing configuration for vite-plugin-validate-env')
-  }
-
+  const options = await loadOptions(rootDir, inlineOptions)
   const variables = await validateAndLog(ui, env, options)
 
   return {
