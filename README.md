@@ -201,7 +201,7 @@ import { defineConfig } from 'vite'
 import { ValidateEnv } from "@julr/vite-plugin-validate-env";
 
 export default defineConfig({
-  plugins: [ValidateEnv({ envFile: 'config/env' })],
+  plugins: [ValidateEnv({ configFile: 'config/env' })],
 })
 ```
 
