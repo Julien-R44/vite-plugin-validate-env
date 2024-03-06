@@ -35,22 +35,28 @@ async function loadOptions(rootDir: string, inlineConfig?: PluginOptions) {
   return config
 }
 
-/**
- * Returns the schema and the validator
- */
-function getNormalizedOptions(options: PluginOptions) {
-  let schema: Schema
-  let validator: FullPluginOptions['validator']
-  const isSchemaNested = 'schema' in options && 'validator' in options
-  if (isSchemaNested) {
-    schema = (options as any).schema
-    validator = (options as any).validator
-  } else {
-    validator = 'builtin'
-    schema = options
+function isFullPluginOptions(options: PluginOptions): options is FullPluginOptions {
+  return 'schema' in options && 'validator' in options
+}
+
+function getNormalizedOptions(options: PluginOptions): {
+  schema: Schema
+  validator: FullPluginOptions['validator']
+} {
+  if (isFullPluginOptions(options)) {
+    return {
+      schema: options.schema,
+      validator: options.validator,
+    }
   }
 
-  return { schema, validator }
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { configFile, debug, ...schema } = options as any
+
+  return {
+    schema,
+    validator: 'builtin',
+  }
 }
 
 /**
