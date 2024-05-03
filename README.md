@@ -266,6 +266,12 @@ interface ImportMetaEnv extends ImportMetaEnvAugmented {
 
 ```
 
+## Sponsors
+
+If you like this project, [please consider supporting it by sponsoring it](https://github.com/sponsors/Julien-R44/). It will help a lot to maintain and improve it. Thanks a lot !
+
+![](https://github.com/julien-r44/static/blob/main/sponsorkit/sponsors.png?raw=true)
+
 ## License
 
 [MIT](./LICENSE.md) License © 2022 [Julien Ripouteau](https://github.com/Julien-R44)
