@@ -1,7 +1,7 @@
 import path from 'node:path'
 import { cwd } from 'node:process'
 import { createConfigLoader as createLoader } from 'unconfig'
-import { type ConfigEnv, type Plugin, type UserConfig } from 'vite'
+import { type ConfigEnv, type Plugin, type UserConfig, resolveEnvPrefix } from 'vite'
 
 import { initUi, type UI } from './ui.js'
 import { zodValidation } from './validators/zod/index.js'
@@ -93,13 +93,18 @@ async function validateEnv(
     ? normalizePath(path.resolve(resolvedRoot, userConfig.envDir))
     : resolvedRoot
 
-  const env = loadEnv(envConfig.mode, envDir, userConfig.envPrefix)
+  const env = loadEnv(envConfig.mode, envDir, '')
 
   const options = await loadOptions(rootDir, inlineOptions)
   const variables = await validateAndLog(ui, env, options)
 
+  const envPrefix = resolveEnvPrefix(userConfig)
+  const prefixedVariables = variables.filter(({ key }) =>
+    envPrefix.some((prefix) => key.startsWith(prefix)),
+  )
+
   return {
-    define: variables.reduce(
+    define: prefixedVariables.reduce(
       (acc, { key, value }) => {
         acc[`import.meta.env.${key}`] = JSON.stringify(value)
         return acc
