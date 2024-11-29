@@ -2,6 +2,7 @@
   "name": "@julr/vite-plugin-validate-env",
   "type": "module",
   "version": "1.1.1",
+  "packageManager": "pnpm@9.14.2+sha512.6e2baf77d06b9362294152c851c4f278ede37ab1eba3a55fda317a4a17b209f4dbb973fb250a77abc463a341fcb1f17f17cfa24091c4eb319cda0d9b84278387",
   "description": "✅ Vite plugin for validating your environment variables",
   "author": "Julien Ripouteau <julien@ripouteau.com>",
   "license": "MIT",
@@ -72,26 +73,26 @@
     }
   },
   "dependencies": {
-    "@poppinss/cliui": "^6.3.0",
+    "@poppinss/cliui": "^6.4.1",
     "@poppinss/validator-lite": "^1.0.3",
-    "unconfig": "^0.3.11"
+    "unconfig": "^0.6.0"
   },
   "devDependencies": {
-    "@japa/assert": "^2.1.0",
-    "@japa/file-system": "^2.2.0",
-    "@japa/runner": "^3.1.1",
-    "@julr/tooling-configs": "^2.1.0",
-    "@types/node": "^20.11.17",
-    "bumpp": "^9.3.0",
+    "@japa/assert": "^3.0.0",
+    "@japa/file-system": "^2.3.0",
+    "@japa/runner": "^3.1.4",
+    "@julr/tooling-configs": "^2.2.0",
+    "@types/node": "^22.10.1",
+    "bumpp": "^9.8.1",
     "cross-env": "^7.0.3",
     "eslint": "^8.56.0",
-    "prettier": "^3.2.5",
-    "rimraf": "^5.0.5",
+    "prettier": "^3.4.1",
+    "rimraf": "^6.0.1",
     "ts-node": "^10.9.2",
-    "typescript": "^5.3.3",
+    "typescript": "^5.7.2",
     "unbuild": "^2.0.0",
-    "vite": "^5.1.1",
-    "zod": "^3.22.4"
+    "vite": "^6.0.1",
+    "zod": "^3.23.8"
   },
   "pnpm": {
     "peerDependencyRules": {

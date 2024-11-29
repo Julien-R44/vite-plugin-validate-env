@@ -25,6 +25,7 @@ async function loadOptions(rootDir: string, inlineConfig?: PluginOptions) {
     sources: [{ files: source, extensions: ['ts', 'cts', 'mts', 'js', 'cjs', 'mjs'] }],
     cwd: rootDir,
     defaults: inlineConfig,
+    importx: { cache: false, loader: 'jiti' },
   })
 
   const result = await loader.load()
