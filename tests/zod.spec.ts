@@ -12,7 +12,7 @@ const ValidateEnv = CoreTypedValidateEnv as (
   ...args: Parameters<typeof CoreTypedValidateEnv>
 ) => ReturnType<typeof CoreTypedValidateEnv> & { ui: UI }
 
-test.group('Zod validation adaptater', () => {
+test.group('Zod validation adapter', () => {
   test('Basic', async ({ assert, fs }) => {
     assert.plan(1)
 
@@ -137,7 +137,7 @@ test.group('Zod validation adaptater', () => {
     await fs.create(ENV_FILENAME, '')
     // @ts-ignore
     const { define } = await plugin.config({ root: fs.basePath }, viteEnvConfig)
-    assert.equal(define['import.meta.env.VITE_OPTIONAL_ZOD'], undefined)
+    assert.isUndefined(define['import.meta.env.VITE_OPTIONAL_ZOD'])
   })
 
   test('dont stop validation after undefined result', async ({ assert, fs }) => {
@@ -155,7 +155,7 @@ test.group('Zod validation adaptater', () => {
     // @ts-ignore
     const { define } = await plugin.config({ root: fs.basePath }, viteEnvConfig)
 
-    assert.equal(define['import.meta.env.VITE_OPTIONAL_ZOD'], undefined)
+    assert.isUndefined(define['import.meta.env.VITE_OPTIONAL_ZOD'])
     assert.equal(define['import.meta.env.VITE_MY_VAR'], '"hello"')
   })
 
@@ -204,7 +204,7 @@ test.group('Zod validation adaptater', () => {
       debug: true,
     })
 
-    await fs.create('.env.development', 'VITE_BOOLEAN=true')
+    await fs.create(ENV_FILENAME, 'VITE_BOOLEAN=true')
 
     // @ts-ignore
     await plugin.config({ root: fs.basePath }, viteEnvConfig)
@@ -239,7 +239,7 @@ test.group('Zod validation adaptater', () => {
       debug: true,
     })
 
-    await fs.create('.env.development', 'VITE_TESTX=not boolean')
+    await fs.create(ENV_FILENAME, 'VITE_TESTX=not boolean')
 
     try {
       // @ts-ignore

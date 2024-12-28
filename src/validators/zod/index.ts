@@ -13,7 +13,7 @@ export function errorReporter(ui: UI, errors: any[]) {
     finalMessage += `  ${ui.colors.yellow(message)} \n`
   }
 
-  return finalMessage as string
+  return finalMessage
 }
 
 /**
