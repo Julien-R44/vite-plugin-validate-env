@@ -1,4 +1,4 @@
-import { z } from 'zod'
+import * as v from 'valibot'
 import { test } from '@japa/runner'
 
 import type { UI } from '../src/ui.js'
@@ -12,33 +12,33 @@ const ValidateEnv = CoreTypedValidateEnv as (
   ...args: Parameters<typeof CoreTypedValidateEnv>
 ) => ReturnType<typeof CoreTypedValidateEnv> & { ui: UI }
 
-test.group('Zod validation adapter', () => {
+test.group('Valibot validation adapter', () => {
   test('Basic', async ({ assert, fs }) => {
     assert.plan(1)
 
     const plugin = ValidateEnv({
-      validator: 'zod',
-      schema: { VITE_TEST: z.string().url().max(10) },
+      validator: 'valibot',
+      schema: { VITE_TEST: v.pipe(v.string(), v.url(), v.maxLength(10)) },
     })
 
     await fs.create(ENV_FILENAME, 'VITE_TEST=htest')
-
     try {
       // @ts-ignore
       await plugin.config({ root: fs.basePath }, viteEnvConfig)
     } catch (error: any) {
-      assert.include(error.message, 'Invalid value for "VITE_TEST" : Invalid url')
+      assert.include(error.message, 'Invalid value for "VITE_TEST" : Invalid URL: Received "htest"')
     }
   })
 
   test('Transform value', async ({ assert, fs }) => {
     const plugin = ValidateEnv({
-      validator: 'zod',
+      validator: 'valibot',
       schema: {
-        VITE_TEST: z
-          .string()
-          .max(10)
-          .transform((value) => value.toUpperCase()),
+        VITE_TEST: v.pipe(
+          v.string(),
+          v.maxLength(10),
+          v.transform((value) => value.toUpperCase()),
+        ),
       },
     })
 
@@ -53,13 +53,13 @@ test.group('Zod validation adapter', () => {
     assert.plan(1)
 
     const plugin = ValidateEnv({
-      validator: 'zod',
+      validator: 'valibot',
       schema: {
-        VITE_LONG_STRING: z.string().max(10, 'Max 10 characters'),
+        VITE_LONG_STRING: v.pipe(v.string(), v.maxLength(10, 'Max 10 characters')),
       },
     })
 
-    await fs.create(ENV_FILENAME, 'VITE_LONG_STRING=superlongstring')
+    await fs.create(ENV_FILENAME, 'VITE_LONG_STRING=hello world')
 
     try {
       // @ts-ignore
@@ -69,36 +69,14 @@ test.group('Zod validation adapter', () => {
     }
   })
 
-  test('Refine value', async ({ assert, fs }) => {
-    assert.plan(1)
-
-    const plugin = ValidateEnv({
-      validator: 'zod',
-      schema: {
-        VITE_REFINED: z.string().refine((value) => value.length <= 10, {
-          message: 'Max 10 characters',
-        }),
-      },
-    })
-
-    await fs.create(ENV_FILENAME, 'VITE_REFINED=superlongstring')
-
-    try {
-      // @ts-ignore
-      await plugin.config({ root: fs.basePath }, viteEnvConfig)
-    } catch (error: any) {
-      assert.include(error.message, 'Invalid value for "VITE_REFINED" : Max 10 characters')
-    }
-  })
-
   test('Display multiple errors', async ({ assert, fs }) => {
     assert.plan(2)
 
     const plugin = ValidateEnv({
-      validator: 'zod',
+      validator: 'valibot',
       schema: {
-        VITE_A: z.string(),
-        VITE_B: z.string(),
+        VITE_A: v.string(),
+        VITE_B: v.string(),
       },
     })
 
@@ -108,8 +86,14 @@ test.group('Zod validation adapter', () => {
       // @ts-ignore
       await plugin.config({ root: fs.basePath }, viteEnvConfig)
     } catch (error: any) {
-      assert.include(error.message, 'Invalid value for "VITE_A" : Required')
-      assert.include(error.message, 'Invalid value for "VITE_B" : Required')
+      assert.include(
+        error.message,
+        'Invalid value for "VITE_A" : Invalid type: Expected string but received undefined',
+      )
+      assert.include(
+        error.message,
+        'Invalid value for "VITE_B" : Invalid type: Expected string but received undefined',
+      )
     }
   })
 
@@ -117,19 +101,21 @@ test.group('Zod validation adapter', () => {
     assert.plan(2)
 
     const plugin = ValidateEnv({
-      validator: 'zod',
-      schema: { VITE_OPTIONAL_ZOD: z.string().max(2).optional() },
+      validator: 'valibot',
+      schema: {
+        VITE_OPTIONAL_VALIBOT: v.optional(v.pipe(v.string(), v.maxLength(2))),
+      },
     })
 
     // Test with the variable set, but invalid
-    await fs.create(ENV_FILENAME, 'VITE_OPTIONAL_ZOD=hello')
+    await fs.create(ENV_FILENAME, 'VITE_OPTIONAL_VALIBOT=hello')
     try {
       // @ts-ignore
       await plugin.config({ root: fs.basePath }, viteEnvConfig)
     } catch (error: any) {
       assert.include(
         error.message,
-        'Invalid value for "VITE_OPTIONAL_ZOD" : String must contain at most 2 character(s)',
+        'Invalid value for "VITE_OPTIONAL_VALIBOT" : Invalid length: Expected <=2 but received 5',
       )
     }
 
@@ -137,17 +123,17 @@ test.group('Zod validation adapter', () => {
     await fs.create(ENV_FILENAME, '')
     // @ts-ignore
     const { define } = await plugin.config({ root: fs.basePath }, viteEnvConfig)
-    assert.isUndefined(define['import.meta.env.VITE_OPTIONAL_ZOD'])
+    assert.isUndefined(define['import.meta.env.VITE_OPTIONAL_VALIBOT'])
   })
 
   test('dont stop validation after undefined result', async ({ assert, fs }) => {
     assert.plan(2)
 
     const plugin = ValidateEnv({
-      validator: 'zod',
+      validator: 'valibot',
       schema: {
-        VITE_OPTIONAL_ZOD: z.string().max(2).optional(),
-        VITE_MY_VAR: z.string(),
+        VITE_OPTIONAL_VALIBOT: v.optional(v.pipe(v.string(), v.maxLength(2))),
+        VITE_MY_VAR: v.string(),
       },
     })
 
@@ -155,7 +141,7 @@ test.group('Zod validation adapter', () => {
     // @ts-ignore
     const { define } = await plugin.config({ root: fs.basePath }, viteEnvConfig)
 
-    assert.isUndefined(define['import.meta.env.VITE_OPTIONAL_ZOD'])
+    assert.isUndefined(define['import.meta.env.VITE_OPTIONAL_VALIBOT'])
     assert.equal(define['import.meta.env.VITE_MY_VAR'], '"hello"')
   })
 
@@ -163,8 +149,14 @@ test.group('Zod validation adapter', () => {
     assert.plan(1)
 
     const plugin = ValidateEnv({
-      validator: 'zod',
-      schema: { VITE_NUMBER: z.preprocess((value) => Number(value), z.number()) },
+      validator: 'valibot',
+      schema: {
+        VITE_NUMBER: v.pipe(
+          v.string(),
+          v.transform((input) => Number(input)),
+          v.number(),
+        ),
+      },
     })
 
     await fs.create(ENV_FILENAME, 'VITE_NUMBER=4323')
@@ -175,31 +167,35 @@ test.group('Zod validation adapter', () => {
   })
 
   test('boolean value', async ({ assert, fs }) => {
-    assert.plan(2)
+    assert.plan(1)
 
     const plugin = ValidateEnv({
-      validator: 'zod',
+      validator: 'valibot',
       schema: {
-        VITE_BOOLEAN: z.preprocess((value) => value === 'true' || value === '1', z.boolean()),
+        VITE_BOOLEAN: v.pipe(
+          v.string(),
+          v.transform((input) => input === 'true' || input === '1'),
+          v.boolean(),
+        ),
       },
     })
 
     await fs.create(ENV_FILENAME, 'VITE_BOOLEAN=true')
+
     // @ts-ignore
     const { define } = await plugin.config({ root: fs.basePath }, viteEnvConfig)
     assert.equal(define['import.meta.env.VITE_BOOLEAN'], 'true')
-
-    await fs.create(ENV_FILENAME, 'VITE_BOOLEAN=1')
-    // @ts-ignore
-    const { define: define2 } = await plugin.config({ root: fs.basePath }, viteEnvConfig)
-    assert.equal(define2['import.meta.env.VITE_BOOLEAN'], 'true')
   })
 
   test('log variables when debug is enabled', async ({ assert, fs }) => {
     const plugin = ValidateEnv({
-      validator: 'zod',
+      validator: 'valibot',
       schema: {
-        VITE_BOOLEAN: z.preprocess((value) => value === 'true' || value === '1', z.boolean()),
+        VITE_BOOLEAN: v.pipe(
+          v.string(),
+          v.transform((input) => input === 'true' || input === '1'),
+          v.boolean(),
+        ),
       },
       debug: true,
     })
@@ -216,26 +212,23 @@ test.group('Zod validation adapter', () => {
 
   test('Optional Variables with Default', async ({ assert, fs }) => {
     const plugin = ValidateEnv({
-      validator: 'zod',
-      schema: { VITE_OPTIONAL_ZOD: z.string().max(2).optional().default('d') },
-      debug: true,
+      validator: 'valibot',
+      schema: {
+        VITE_OPTIONAL: v.optional(v.string(), 'default'),
+      },
     })
 
     await fs.create(ENV_FILENAME, '')
 
     // @ts-ignore
     const { define } = await plugin.config({ root: fs.basePath }, viteEnvConfig)
-    const logs = plugin.ui.logger.getLogs()
-
-    assert.equal(define['import.meta.env.VITE_OPTIONAL_ZOD'], '"d"')
-    assert.deepEqual(logs[0].message, 'cyan([vite-plugin-validate-env]) debug process.env content')
-    assert.deepInclude(logs[1].message, 'cyan(VITE_OPTIONAL_ZOD): d')
+    assert.equal(define['import.meta.env.VITE_OPTIONAL'], '"default"')
   })
 
   test('log variables even if validation is failing', async ({ assert, fs }) => {
     const plugin = ValidateEnv({
-      validator: 'zod',
-      schema: { VITE_TESTX: z.boolean() },
+      validator: 'valibot',
+      schema: { VITE_TESTX: v.boolean() },
       debug: true,
     })
 
@@ -247,7 +240,7 @@ test.group('Zod validation adapter', () => {
     } catch (error: any) {
       assert.include(
         error.message,
-        'Invalid value for "VITE_TESTX" : Expected boolean, received string',
+        'Invalid value for "VITE_TESTX" : Invalid type: Expected boolean but received "not boolean"',
       )
     }
 

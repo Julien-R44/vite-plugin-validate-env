@@ -1,5 +1,6 @@
 import type { z } from 'zod'
 import type { ValidateFn } from '@poppinss/validator-lite'
+import type { BaseSchema, BaseIssue, InferOutput } from 'valibot'
 
 /**
  * Schema defined by the user
@@ -15,6 +16,7 @@ export type PluginOptions = Schema | FullPluginOptions
 export type FullPluginOptions = (
   | { validator: 'builtin'; schema: PoppinsSchema }
   | { validator: 'zod'; schema: ZodSchema }
+  | { validator: 'valibot'; schema: ValibotSchema }
 ) & { debug?: boolean; configFile?: string }
 
 /**
@@ -27,7 +29,12 @@ export type PoppinsSchema = RecordViteKeys<ValidateFn<any>>
  */
 export type ZodSchema = RecordViteKeys<z.ZodType<any, any>>
 
-export type Schema = PoppinsSchema | ZodSchema
+/**
+ * Contract for schema defintion for valibot validator
+ */
+export type ValibotSchema = RecordViteKeys<BaseSchema<unknown, unknown, BaseIssue<unknown>>>
+
+export type Schema = PoppinsSchema | ZodSchema | ValibotSchema
 
 /**
  * Infer the schema type from the plugin options
@@ -43,7 +50,9 @@ type EnvValue<Fn> = Fn extends (...args: any) => any
   ? ReturnType<Fn>
   : Fn extends z.ZodType
     ? z.infer<Fn>
-    : never
+    : Fn extends BaseSchema<unknown, unknown, BaseIssue<unknown>>
+      ? InferOutput<Fn>
+      : never
 
 /**
  * Augment the import.meta.env object with the values returned by the schema validator

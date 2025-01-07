@@ -166,7 +166,79 @@ export default defineConfig({
 })
 ```
 
-In this case, `true` and `1` will be transformed to `true` and your variable will be valid and considered as a boolean. 
+In this case, `true` and `1` will be transformed to `true` and your variable will be valid and considered as a boolean.
+
+### Valibot Validator
+To use the Valibot validator, you must first install it if you have not already done so
+```
+pnpm install valibot
+```
+
+Then, you can use it as follows: 
+```ts
+// env.ts
+import { defineConfig } from "@julr/vite-plugin-validate-env";
+import * as v from "valibot";
+
+enum Enum {
+  a = "a",
+  b = "b",
+  c = "c",
+}
+
+export default defineConfig({
+  validator: "valibot",
+  schema: {
+    VITE_MY_STRING: v.pipe(v.string(), v.minLength(5, "This is too short !")),
+    VITE_ENUM: v.enum(Enum),
+    VITE_BOOLEAN_VARIABLE: v.pipe(
+      v.string(),
+      v.transform((value) => value === "true" || value === "1"),
+      v.boolean()
+    ),
+  },
+});
+
+```
+
+Beware, there are some limitations if you use Valibot. For example, you can't use a boolean or number type directly. Because everything that comes from your `.env` file is a string by default.
+
+So to validate other types than string you must use`transform`, like this:
+```ts
+// env.ts
+import { defineConfig } from "@julr/vite-plugin-validate-env";
+import * as v from "valibot";
+
+export default defineConfig({
+  validator: "valibot",
+  schema: {
+    // This will transform the string 'true' or '1' to a boolean
+    VITE_BOOLEAN_VARIABLE: v.pipe(
+      v.string(),
+      v.transform((value) => value === "true" || value === "1"),
+      v.boolean()
+    ),
+
+    // Will convert the string to a number
+    VITE_NUMBER: v.pipe(
+      v.string(),
+      v.transform((value) => Number(value)),
+      v.number()
+    ),
+
+    // Will parse the string to an object
+    VITE_OBJECT: v.pipe(
+      v.string(),
+      v.transform((value) => JSON.parse(value)),
+      v.object({
+        a: v.string(),
+        b: v.number(),
+      })
+    ),
+  },
+});
+```
+
 
 ## Dedicated config file
 
