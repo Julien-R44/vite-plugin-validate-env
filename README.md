@@ -275,7 +275,6 @@ interface ImportMetaEnv extends ImportMetaEnvAugmented {
 Here is an example of how to use it with the plugin:
 
 ```ts
-// Zod validation
 import { defineConfig } from '@julr/vite-plugin-validate-env'
 import { z } from 'zod'
 import * as v from 'valibot'
