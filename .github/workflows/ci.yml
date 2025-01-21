@@ -1,79 +1,12 @@
-name: CI
-
+name: checks
 on:
-  push:
-    branches:
-      - main
-      - master
-
-  pull_request:
-    branches:
-      - main
-      - master
-
+  - push
+  - pull_request
+  - workflow_call
 jobs:
-  lint:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: 21
-
-      - name: Install pnpm
-        run: |
-          corepack enable
-          corepack prepare pnpm@latest --activate
-
-      - name: Install
-        run: pnpm install
-
-      - name: Lint
-        run: pnpm lint
-
-  typecheck:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: 21
-
-      - name: Install pnpm
-        run: |
-          corepack enable
-          corepack prepare pnpm@latest --activate
-
-      - name: Install
-        run: pnpm install
-
-      - name: Typecheck
-        run: pnpm typecheck
-
   test:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: 21
-
-      - name: Install pnpm
-        run: |
-          corepack enable
-          corepack prepare pnpm@latest --activate
-
-      - name: Install
-        run: pnpm install
-
-      - name: Build
-        run: pnpm build
-
-      - name: Test
-        run: pnpm test
+    uses: Julien-R44/.github/workflows/test.yml@main
+  lint:
+    uses: Julien-R44/.github/workflows/lint.yml@main
+  typecheck:
+    uses: Julien-R44/.github/workflows/typecheck.yml@main
