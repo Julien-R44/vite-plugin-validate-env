@@ -137,11 +137,11 @@ async function validateAndLog(ui: UI, env: Record<string, string>, options: Plug
 /**
  * Validate environment variables against a schema
  */
-export const ValidateEnv = (options?: PluginOptions): Plugin & { __ui: typeof ui } => {
+export const ValidateEnv = (options?: PluginOptions): Plugin => {
   const ui = initUi()
   return {
     // @ts-expect-error - only used for testing as we need to keep each instance of the plugin unique to a test
-    __ui: process.env.NODE_ENV === 'testing' ? ui : undefined,
+    ui: process.env.NODE_ENV === 'testing' ? ui : undefined,
     name: 'vite-plugin-validate-env',
     config: (config, env) => validateEnv(ui, config, env, options),
   }

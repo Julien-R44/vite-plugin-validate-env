@@ -3,8 +3,7 @@ import * as v from 'valibot'
 import { type } from 'arktype'
 import { test } from '@japa/runner'
 
-import { ValidateEnv } from '../src/index.js'
-import { createEnvFile, executeValidateEnv } from './helpers.js'
+import { createEnvFile, executeValidateEnv, ValidateEnv } from './helpers.js'
 
 test.group('Standard validation adapter | Zod', () => {
   test('basic', async ({ assert }) => {
@@ -166,7 +165,7 @@ test.group('Standard validation adapter | Zod', () => {
     await createEnvFile({ VITE_BOOLEAN: 'true' })
     await executeValidateEnv(plugin)
 
-    const logs = plugin.__ui.logger.getLogs()
+    const logs = plugin.ui.logger.getLogs()
     assert.deepEqual(logs[0].message, 'cyan([vite-plugin-validate-env]) debug process.env content')
     assert.deepInclude(logs[1].message, 'cyan(VITE_BOOLEAN): true')
   })
@@ -182,7 +181,7 @@ test.group('Standard validation adapter | Zod', () => {
 
     // @ts-ignore
     const { define } = await executeValidateEnv(plugin)
-    const logs = plugin.__ui.logger.getLogs()
+    const logs = plugin.ui.logger.getLogs()
 
     assert.equal(define['import.meta.env.VITE_OPTIONAL_ZOD'], '"d"')
     assert.deepEqual(logs[0].message, 'cyan([vite-plugin-validate-env]) debug process.env content')
@@ -203,7 +202,7 @@ test.group('Standard validation adapter | Zod', () => {
       /Invalid value for "VITE_TESTX" : Expected boolean, received string/,
     )
 
-    const logs = plugin.__ui.logger.getLogs()
+    const logs = plugin.ui.logger.getLogs()
     const messages = logs.map((log) => log.message)
     assert.isDefined(
       messages.find(
