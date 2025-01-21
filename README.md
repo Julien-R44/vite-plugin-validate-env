@@ -9,7 +9,7 @@ No more CI to restart because you are missing an environment variable, or to rea
 ## Features
 - Validate your environment variables at **build time only**. No runtime overhead
 - Totally type-safe
-- Support multiple validation librairies ( [Zod](https://zod.dev/), and [@poppinss/validator-lite](https://github.com/poppinss/validator-lite/) )
+- Support [standard-schema](https://github.com/standard-schema/standard-schema), meaning you can use every libraries compatible with it ( Zod, Valibot, ArkType )
 - Parsing, validation and transformation of your variables
 - Custom rules and error messages
 
@@ -264,6 +264,39 @@ interface ImportMetaEnv extends ImportMetaEnvAugmented {
   // You can also add custom variables that are not defined in your schema
 }
 ```
+
+## Standard Schema
+
+> [!WARNING]  
+> As long as standard-schema has not been published in 1.0.0, I will possibly make breaking changes to the API without major release.
+
+[standard-schema](https://github.com/standard-schema/standard-schema) is basically an attempt to standardize the way we can use validation librairies. It means that you can use any library that is compatible with it. As the date of writing, Zod, Valibot, Arktype, ArriSchema are compatible.
+
+Here is an example of how to use it with the plugin:
+
+```ts
+// Zod validation
+import { defineConfig } from '@julr/vite-plugin-validate-env'
+import { z } from 'zod'
+import * as v from 'valibot'
+import { type } from 'arktype'
+
+export default defineConfig({
+  validator: 'standard', // Make sure to use 'standard' validator
+  schema: {
+    // Zod
+    VITE_ZOD_VARIABLE: z.string(),
+
+    // Valibot
+    VITE_VALIBOT_VARIABLE: v.string(),
+
+    // Arktype
+    VITE_ARKTYPE_VARIABLE: type.string(),
+  },
+})
+```
+
+Make sure to upgrade your validation library to the latest version to ensure using a compatible version with standard-schema. For example, Zod minimum version is `3.24.0`.
 
 ## Forbid unknown variables
 
