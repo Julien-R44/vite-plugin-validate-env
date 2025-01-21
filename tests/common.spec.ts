@@ -217,7 +217,7 @@ test.group('vite-plugin-validate-env', () => {
     // @ts-ignore
     await plugin.config({ root: fs.basePath }, viteEnvConfig)
 
-    const logs = plugin.ui.logger.getLogs()
+    const logs = plugin.__ui.logger.getLogs()
     assert.deepEqual(logs[0].message, 'cyan([vite-plugin-validate-env]) debug process.env content')
     assert.deepInclude(logs[1].message, 'cyan(VITE_BOOLEAN): true')
   })
@@ -238,7 +238,7 @@ test.group('vite-plugin-validate-env', () => {
       assert.include(error.message, 'Value for environment variable "VITE_TESTX" must be a boolean')
     }
 
-    const logs = plugin.ui.logger.getLogs()
+    const logs = plugin.__ui.logger.getLogs()
     const messages = logs.map((log) => log.message)
     assert.isDefined(
       messages.find(

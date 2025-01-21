@@ -6,6 +6,7 @@ import { type ConfigEnv, type Plugin, type UserConfig } from 'vite'
 import { initUi, type UI } from './ui.js'
 import { zodValidation } from './validators/zod/index.js'
 import { builtinValidation } from './validators/builtin/index.js'
+import { standardValidation } from './validators/standard/index.js'
 import type { FullPluginOptions, PluginOptions, Schema } from './types.js'
 
 /**
@@ -113,7 +114,9 @@ async function validateEnv(
 async function validateAndLog(ui: UI, env: Record<string, string>, options: PluginOptions) {
   const { schema, validator } = getNormalizedOptions(options)
   const showDebug = shouldLogVariables(options)
-  const validate = { zod: zodValidation, builtin: builtinValidation }[validator]
+  const validate = { zod: zodValidation, builtin: builtinValidation, standard: standardValidation }[
+    validator
+  ]
 
   try {
     const variables = await validate(ui, env, schema as any)
@@ -134,11 +137,11 @@ async function validateAndLog(ui: UI, env: Record<string, string>, options: Plug
 /**
  * Validate environment variables against a schema
  */
-export const ValidateEnv = (options?: PluginOptions): Plugin => {
+export const ValidateEnv = (options?: PluginOptions): Plugin & { __ui: typeof ui } => {
   const ui = initUi()
   return {
     // @ts-expect-error - only used for testing as we need to keep each instance of the plugin unique to a test
-    ui: process.env.NODE_ENV === 'testing' ? ui : undefined,
+    __ui: process.env.NODE_ENV === 'testing' ? ui : undefined,
     name: 'vite-plugin-validate-env',
     config: (config, env) => validateEnv(ui, config, env, options),
   }

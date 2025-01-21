@@ -209,7 +209,7 @@ test.group('Zod validation adaptater', () => {
     // @ts-ignore
     await plugin.config({ root: fs.basePath }, viteEnvConfig)
 
-    const logs = plugin.ui.logger.getLogs()
+    const logs = plugin.__ui.logger.getLogs()
     assert.deepEqual(logs[0].message, 'cyan([vite-plugin-validate-env]) debug process.env content')
     assert.deepInclude(logs[1].message, 'cyan(VITE_BOOLEAN): true')
   })
@@ -225,7 +225,7 @@ test.group('Zod validation adaptater', () => {
 
     // @ts-ignore
     const { define } = await plugin.config({ root: fs.basePath }, viteEnvConfig)
-    const logs = plugin.ui.logger.getLogs()
+    const logs = plugin.__ui.logger.getLogs()
 
     assert.equal(define['import.meta.env.VITE_OPTIONAL_ZOD'], '"d"')
     assert.deepEqual(logs[0].message, 'cyan([vite-plugin-validate-env]) debug process.env content')
@@ -251,7 +251,7 @@ test.group('Zod validation adaptater', () => {
       )
     }
 
-    const logs = plugin.ui.logger.getLogs()
+    const logs = plugin.__ui.logger.getLogs()
     const messages = logs.map((log) => log.message)
     assert.isDefined(
       messages.find(

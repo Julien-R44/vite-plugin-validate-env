@@ -82,7 +82,9 @@
     "@japa/file-system": "^2.3.0",
     "@japa/runner": "^3.1.4",
     "@julr/tooling-configs": "^2.2.0",
+    "@standard-schema/spec": "1.0.0-rc.0",
     "@types/node": "^22.10.1",
+    "arktype": "^2.0.0",
     "bumpp": "^9.8.1",
     "cross-env": "^7.0.3",
     "eslint": "^8.56.0",
@@ -91,8 +93,9 @@
     "ts-node": "^10.9.2",
     "typescript": "^5.7.2",
     "unbuild": "^2.0.0",
+    "valibot": "1.0.0-beta.12",
     "vite": "^6.0.1",
-    "zod": "^3.23.8"
+    "zod": "^3.24.0"
   },
   "pnpm": {
     "peerDependencyRules": {

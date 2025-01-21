@@ -1,5 +1,6 @@
 import type { z } from 'zod'
 import type { ValidateFn } from '@poppinss/validator-lite'
+import type { StandardSchemaV1 } from '@standard-schema/spec'
 
 /**
  * Schema defined by the user
@@ -15,6 +16,7 @@ export type PluginOptions = Schema | FullPluginOptions
 export type FullPluginOptions = (
   | { validator: 'builtin'; schema: PoppinsSchema }
   | { validator: 'zod'; schema: ZodSchema }
+  | { validator: 'standard'; schema: StandardSchema }
 ) & { debug?: boolean; configFile?: string }
 
 /**
@@ -26,6 +28,11 @@ export type PoppinsSchema = RecordViteKeys<ValidateFn<any>>
  * Contract for schema definition for zod validator
  */
 export type ZodSchema = RecordViteKeys<z.ZodType<any, any>>
+
+/**
+ * Contract for schema definition for standard-schema validator
+ */
+export type StandardSchema = RecordViteKeys<StandardSchemaV1>
 
 export type Schema = PoppinsSchema | ZodSchema
 
