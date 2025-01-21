@@ -34,8 +34,7 @@ test.group('Zod validation adaptater', () => {
 
     await createEnvFile({ VITE_TEST: 'hello' })
 
-    // @ts-expect-error - 'config' is the handler
-    const { define } = await plugin.config!({ root: fs.basePath }, viteEnvConfig)
+    const { define } = await executeValidateEnv(plugin)
     assert.equal(define['import.meta.env.VITE_TEST'], '"HELLO"')
   })
 
