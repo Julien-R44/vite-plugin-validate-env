@@ -2,7 +2,7 @@
   "name": "@julr/vite-plugin-validate-env",
   "type": "module",
   "version": "1.2.0",
-  "packageManager": "pnpm@9.14.2+sha512.6e2baf77d06b9362294152c851c4f278ede37ab1eba3a55fda317a4a17b209f4dbb973fb250a77abc463a341fcb1f17f17cfa24091c4eb319cda0d9b84278387",
+  "packageManager": "pnpm@9.15.4",
   "description": "✅ Vite plugin for validating your environment variables",
   "author": "Julien Ripouteau <julien@ripouteau.com>",
   "license": "MIT",
@@ -73,29 +73,29 @@
     }
   },
   "dependencies": {
-    "@poppinss/cliui": "^6.4.1",
+    "@poppinss/cliui": "^6.4.2",
     "@poppinss/validator-lite": "^1.0.3",
-    "unconfig": "^0.6.0"
+    "unconfig": "^0.6.1"
   },
   "devDependencies": {
-    "@japa/assert": "^3.0.0",
-    "@japa/file-system": "^2.3.0",
-    "@japa/runner": "^3.1.4",
-    "@julr/tooling-configs": "^2.2.0",
+    "@japa/assert": "^4.0.1",
+    "@japa/file-system": "^2.3.2",
+    "@japa/runner": "^4.1.0",
+    "@julr/tooling-configs": "^3.0.1",
     "@standard-schema/spec": "1.0.0-rc.0",
-    "@types/node": "^22.10.1",
+    "@types/node": "^22.10.7",
     "arktype": "^2.0.0",
-    "bumpp": "^9.8.1",
+    "bumpp": "^9.10.1",
     "cross-env": "^7.0.3",
-    "eslint": "^8.56.0",
-    "prettier": "^3.4.1",
+    "eslint": "^9.18.0",
+    "prettier": "^3.4.2",
     "rimraf": "^6.0.1",
     "ts-node": "^10.9.2",
-    "typescript": "^5.7.2",
+    "typescript": "^5.7.3",
     "unbuild": "^2.0.0",
     "valibot": "1.0.0-beta.12",
-    "vite": "^6.0.1",
-    "zod": "^3.24.0"
+    "vite": "^6.0.10",
+    "zod": "^3.24.1"
   },
   "pnpm": {
     "peerDependencyRules": {
