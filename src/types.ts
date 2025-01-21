@@ -1,6 +1,6 @@
-import type { z } from 'zod'
 import type { ValidateFn } from '@poppinss/validator-lite'
 import type { StandardSchemaV1 } from '@standard-schema/spec'
+import type { z } from 'zod'
 
 /**
  * Schema defined by the user
@@ -19,22 +19,11 @@ export type FullPluginOptions = (
   | { validator: 'standard'; schema: StandardSchema }
 ) & { debug?: boolean; configFile?: string }
 
-/**
- * Contract for schema definition for poppins validator
- */
 export type PoppinsSchema = RecordViteKeys<ValidateFn<any>>
-
-/**
- * Contract for schema definition for zod validator
- */
 export type ZodSchema = RecordViteKeys<z.ZodType<any, any>>
-
-/**
- * Contract for schema definition for standard-schema validator
- */
 export type StandardSchema = RecordViteKeys<StandardSchemaV1>
 
-export type Schema = PoppinsSchema | ZodSchema
+export type Schema = PoppinsSchema | ZodSchema | StandardSchema
 
 /**
  * Infer the schema type from the plugin options
@@ -50,7 +39,9 @@ type EnvValue<Fn> = Fn extends (...args: any) => any
   ? ReturnType<Fn>
   : Fn extends z.ZodType
     ? z.infer<Fn>
-    : never
+    : Fn extends StandardSchemaV1
+      ? StandardSchemaV1.InferOutput<Fn>
+      : never
 
 /**
  * Augment the import.meta.env object with the values returned by the schema validator
