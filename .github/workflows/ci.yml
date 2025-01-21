@@ -5,8 +5,8 @@ on:
   - workflow_call
 jobs:
   test:
-    uses: Julien-R44/.github/workflows/test.yml@main
+    uses: Julien-R44/.github/.github/workflows/test.yml@main
   lint:
-    uses: Julien-R44/.github/workflows/lint.yml@main
+    uses: Julien-R44/.github/.github/workflows/lint.yml@main
   typecheck:
-    uses: Julien-R44/.github/workflows/typecheck.yml@main
+    uses: Julien-R44/.github/.github/workflows/typecheck.yml@main
