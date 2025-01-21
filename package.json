@@ -97,14 +97,5 @@
     "vite": "^6.0.10",
     "zod": "^3.24.1"
   },
-  "pnpm": {
-    "peerDependencyRules": {
-      "ignoreMissing": [
-        "openapi-types",
-        "@babel/core",
-        "@japa/core"
-      ]
-    }
-  },
   "prettier": "@julr/tooling-configs/prettier"
 }
