@@ -4,7 +4,6 @@ import { createConfigLoader as createLoader } from 'unconfig'
 import { type ConfigEnv, type Plugin, type UserConfig } from 'vite'
 
 import { initUi, type UI } from './ui.js'
-import { zodValidation } from './validators/zod/index.js'
 import { builtinValidation } from './validators/builtin/index.js'
 import { standardValidation } from './validators/standard/index.js'
 import type { FullPluginOptions, PluginOptions, Schema } from './types.js'
@@ -113,9 +112,7 @@ async function validateEnv(
 async function validateAndLog(ui: UI, env: Record<string, string>, options: PluginOptions) {
   const { schema, validator } = getNormalizedOptions(options)
   const showDebug = shouldLogVariables(options)
-  const validate = { zod: zodValidation, builtin: builtinValidation, standard: standardValidation }[
-    validator
-  ]
+  const validate = { builtin: builtinValidation, standard: standardValidation }[validator]
 
   try {
     const variables = await validate(ui, env, schema as any)

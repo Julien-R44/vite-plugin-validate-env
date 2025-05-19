@@ -9,7 +9,7 @@ No more CI to restart because you are missing an environment variable, or to rea
 ## Features
 - Validate your environment variables at **build time only**. No runtime overhead
 - Totally type-safe
-- Support [standard-schema](https://github.com/standard-schema/standard-schema), meaning you can use every libraries compatible with it ( Zod, Valibot, ArkType )
+- Support [standard-schema](https://github.com/standard-schema/standard-schema), meaning you can use every libraries compatible with it ( Zod, Valibot, ArkType... )
 - Parsing, validation and transformation of your variables
 - Custom rules and error messages
 
@@ -47,7 +47,7 @@ import { ValidateEnv } from "@julr/vite-plugin-validate-env";
 export default defineConfig({
   plugins: [
     ValidateEnv({
-      validator: 'zod',
+      standard,
       schema: {
         VITE_MY_VAR: z.string()
       }
@@ -114,59 +114,32 @@ export default defineConfig({
 })
 ```
 
-### Zod Validator
-To use the Zod validator, you must first install it if you have not already done so
-```
-pnpm install zod
-```
+## Standard Schema
 
-Then, you can use it as follows: 
+[standard-schema](https://github.com/standard-schema/standard-schema) is basically an attempt to standardize the way we can use validation libraries. It means that you can use any library that is compatible with it. Zod, Valibot, ArkType are popular libraries that are compatible with it.
+
+Here is an example of how to use it with the plugin:
+
 ```ts
-// env.ts
 import { defineConfig } from '@julr/vite-plugin-validate-env'
 import { z } from 'zod'
+import * as v from 'valibot'
+import { type } from 'arktype'
 
 export default defineConfig({
-  validator: 'zod',
+  validator: 'standard', // Make sure to use 'standard' validator
   schema: {
-    VITE_MY_STRING: z.string().min(5, 'This is too short !'),
-    VITE_ENUM: z.enum(['a', 'b', 'c']),
-    VITE_BOOLEAN_VARIABLE: z.boolean(),
-  }
+    // Zod
+    VITE_ZOD_VARIABLE: z.string(),
+
+    // Valibot
+    VITE_VALIBOT_VARIABLE: v.string(),
+
+    // Arktype
+    VITE_ARKTYPE_VARIABLE: type.string(),
+  },
 })
 ```
-
-Beware, there are some limitations if you use Zod. For example, you can't use a boolean or number type directly. Because everything that comes from your `.env` file is a string by default.
-
-So to validate other types than string you must use `preprocess`, and `transform`, like this:
-```ts
-// env.ts
-import { defineConfig } from '@julr/vite-plugin-validate-env'
-import { z } from 'zod'
-
-export default defineConfig({
-  validator: 'zod',
-  schema: {
-    // This will transform the string 'true' or '1' to a boolean
-    VITE_BOOLEAN_VARIABLE: z
-      .preprocess((value) => value === 'true' || value === '1', z.boolean()),
-
-    // Will convert the string to a number
-    VITE_NUMBER: z.preprocess((value) => Number(value), z.number()),
-
-    // Will parse the string to an object
-    VITE_OBJECT: z.preprocess(
-      (value) => JSON.parse(value as string),
-      z.object({
-        a: z.string(),
-        b: z.number(),
-      }),
-    ),
-  }
-})
-```
-
-In this case, `true` and `1` will be transformed to `true` and your variable will be valid and considered as a boolean. 
 
 ## Dedicated config file
 
@@ -237,7 +210,7 @@ import { defineConfig } from '@julr/vite-plugin-validate-env'
 import { z } from 'zod'
 
 export default defineConfig({
-  validator: 'zod',
+  validator: 'standard',
   schema: {
     VITE_AUTH_API_URL: z
       .string()
@@ -264,38 +237,6 @@ interface ImportMetaEnv extends ImportMetaEnvAugmented {
   // You can also add custom variables that are not defined in your schema
 }
 ```
-
-## Standard Schema
-
-> [!WARNING]  
-> As long as standard-schema has not been published in 1.0.0, I will possibly make breaking changes to the API without major release.
-
-[standard-schema](https://github.com/standard-schema/standard-schema) is basically an attempt to standardize the way we can use validation librairies. It means that you can use any library that is compatible with it. As the date of writing, Zod, Valibot, Arktype, ArriSchema are compatible.
-
-Here is an example of how to use it with the plugin:
-
-```ts
-import { defineConfig } from '@julr/vite-plugin-validate-env'
-import { z } from 'zod'
-import * as v from 'valibot'
-import { type } from 'arktype'
-
-export default defineConfig({
-  validator: 'standard', // Make sure to use 'standard' validator
-  schema: {
-    // Zod
-    VITE_ZOD_VARIABLE: z.string(),
-
-    // Valibot
-    VITE_VALIBOT_VARIABLE: v.string(),
-
-    // Arktype
-    VITE_ARKTYPE_VARIABLE: type.string(),
-  },
-})
-```
-
-Make sure to upgrade your validation library to the latest version to ensure using a compatible version with standard-schema. For example, Zod minimum version is `3.24.0`.
 
 ## Forbid unknown variables
 

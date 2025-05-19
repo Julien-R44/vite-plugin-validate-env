@@ -15,15 +15,13 @@ export type PluginOptions = Schema | FullPluginOptions
 
 export type FullPluginOptions = (
   | { validator: 'builtin'; schema: PoppinsSchema }
-  | { validator: 'zod'; schema: ZodSchema }
   | { validator: 'standard'; schema: StandardSchema }
 ) & { debug?: boolean; configFile?: string }
 
 export type PoppinsSchema = RecordViteKeys<ValidateFn<any>>
-export type ZodSchema = RecordViteKeys<z.ZodType<any, any>>
 export type StandardSchema = RecordViteKeys<StandardSchemaV1>
 
-export type Schema = PoppinsSchema | ZodSchema | StandardSchema
+export type Schema = PoppinsSchema | StandardSchema
 
 /**
  * Infer the schema type from the plugin options

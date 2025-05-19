@@ -38,5 +38,5 @@ export async function standardValidation(
     throw new Error(errorReporter(ui, errors))
   }
 
-  return variables
+  return variables as { key: string; value: any }[]
 }
