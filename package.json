@@ -2,7 +2,7 @@
   "name": "@julr/vite-plugin-validate-env",
   "type": "module",
   "version": "1.3.0",
-  "packageManager": "pnpm@9.15.4",
+  "packageManager": "pnpm@10.11.0",
   "description": "✅ Vite plugin for validating your environment variables",
   "author": "Julien Ripouteau <julien@ripouteau.com>",
   "license": "MIT",
@@ -73,28 +73,28 @@
     }
   },
   "dependencies": {
-    "@poppinss/cliui": "^6.4.2",
-    "@poppinss/validator-lite": "^1.0.3",
-    "unconfig": "^0.6.1"
+    "@poppinss/cliui": "^6.4.3",
+    "@poppinss/validator-lite": "^2.1.0",
+    "unconfig": "^7.3.2"
   },
   "devDependencies": {
     "@japa/assert": "^4.0.1",
     "@japa/file-system": "^2.3.2",
-    "@japa/runner": "^4.1.0",
-    "@julr/tooling-configs": "^3.0.1",
+    "@japa/runner": "^4.2.0",
+    "@julr/tooling-configs": "^4.0.0",
     "@standard-schema/spec": "1.0.0-rc.0",
-    "@types/node": "^22.10.7",
-    "arktype": "^2.0.0",
-    "bumpp": "^9.10.1",
+    "@types/node": "^22.15.19",
+    "arktype": "^2.1.20",
+    "bumpp": "^10.1.1",
     "cross-env": "^7.0.3",
-    "eslint": "^9.18.0",
-    "prettier": "^3.4.2",
+    "eslint": "^9.27.0",
+    "prettier": "^3.5.3",
     "ts-node": "^10.9.2",
-    "tsup": "^8.3.5",
-    "typescript": "^5.7.3",
+    "tsup": "^8.5.0",
+    "typescript": "^5.8.3",
     "valibot": "1.0.0-beta.12",
-    "vite": "^6.0.11",
-    "zod": "^3.24.1"
+    "vite": "^6.3.5",
+    "zod": "^3.25.7"
   },
   "prettier": "@julr/tooling-configs/prettier"
 }

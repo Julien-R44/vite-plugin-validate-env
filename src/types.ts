@@ -1,6 +1,6 @@
 import type { z } from 'zod'
-import type { ValidateFn } from '@poppinss/validator-lite'
 import type { StandardSchemaV1 } from '@standard-schema/spec'
+import type { ValidateFn } from '@poppinss/validator-lite/types'
 
 /**
  * Schema defined by the user

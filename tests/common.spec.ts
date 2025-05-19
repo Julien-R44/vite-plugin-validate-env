@@ -10,7 +10,7 @@ test.group('vite-plugin-validate-env', () => {
 
     await assert.rejects(
       () => executeValidateEnv(plugin),
-      /Value for environment variable "VITE_TEST" must be a boolean/,
+      /"VITE_TEST" env variable must be a boolean/,
     )
   })
 
@@ -60,7 +60,7 @@ test.group('vite-plugin-validate-env', () => {
 
     await assert.rejects(
       () => executeValidateEnv(plugin, { envPrefix: 'CUSTOM_' }),
-      /Value for environment variable "CUSTOM_TEST" must be a boolean, instead received "not boolean"/,
+      /"CUSTOM_TEST" env variable must be a boolean \(Current value: "not boolean"\)/,
     )
   })
 
@@ -96,7 +96,7 @@ test.group('vite-plugin-validate-env', () => {
     await createEnvFile({ VITE_OPTIONAL: 'not a number' })
     await assert.rejects(
       () => executeValidateEnv(plugin),
-      /Value for environment variable "VITE_OPTIONAL" must be numeric, instead received "not a number"/,
+      /"VITE_OPTIONAL" env variable must be a number \(Current value: "not a number"\)/,
     )
 
     // Test without variable
@@ -169,7 +169,7 @@ test.group('vite-plugin-validate-env', () => {
 
     await assert.rejects(
       () => executeValidateEnv(plugin),
-      /Value for environment variable "VITE_TESTX" must be a boolean/,
+      /"VITE_TESTX" env variable must be a boolean \(Current value: "not boolean"\)/,
     )
 
     const logs = plugin.ui.logger.getLogs()
