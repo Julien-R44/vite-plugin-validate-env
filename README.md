@@ -86,11 +86,13 @@ ValidateEnv({
   // With custom error message
   VITE_PORT: Schema.number({ message: 'You must set a port!' }),
 
-  // Custom validator
-  VITE_CUSTOM: (key, value) => {
+  // Custom validator + transform function
+  VITE_URL_SUFFIXED_WITH_SLASH: (key, value) => {
     if (!value) throw new Error(`Missing ${key}`)
-    if (value.endsWith('foo')) throw new Error('Cannot end with "foo"')
-    return value
+
+    return value.endsWith('/')
+      ? value
+      : `${value}/`
   },
 })
 ```
@@ -175,30 +177,6 @@ export const env: ImportMetaEnvAugmented = import.meta.env;
 ```
 
 By using `env` instead of `import.meta.env` in your code, TypeScript will now throw an error if you try to access an unknown variable.
-
-
-## Transforming Variables
-
-You can also **transform** values during parsing :
-
-### Built-in:
-
-```ts
-VITE_API_URL: (key, value) => {
-  if (!value) throw new Error(`Missing ${key}`)
-  return value.endsWith('/') ? value : `${value}/`
-}
-```
-
-### With Zod:
-
-```ts
-VITE_API_URL: z.string().transform((v) =>
-  v.endsWith('/') ? v : `${v}/`
-)
-```
-
-See the documentation of your validator for more details.
 
 ## 💖 Sponsors
 
