@@ -41,7 +41,10 @@ import { Schema, ValidateEnv } from '@julr/vite-plugin-validate-env'
 export default defineConfig({
   plugins: [
     ValidateEnv({
-      VITE_MY_VAR: Schema.string()
+      validator: 'builtin',
+      schema: {
+        VITE_MY_VAR: Schema.string()
+      }
     }),
   ],
 })
