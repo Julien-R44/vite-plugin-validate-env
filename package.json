@@ -48,7 +48,7 @@
     "dist"
   ],
   "engines": {
-    "node": ">=16"
+    "node": ">=22"
   },
   "scripts": {
     "build": "tsup",
