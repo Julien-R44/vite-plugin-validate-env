@@ -6,5 +6,5 @@ export default defineConfig({
   clean: true,
   external: ['vite'],
   sourcemap: true,
-  format: ['cjs', 'esm'],
+  format: ['esm'],
 })
