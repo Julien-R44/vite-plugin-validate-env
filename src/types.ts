@@ -1,4 +1,5 @@
 import type { z } from 'zod'
+import type { ConfigEnv, UserConfig } from 'vite'
 import type { StandardSchemaV1 } from '@standard-schema/spec'
 import type { ValidateFn } from '@poppinss/validator-lite/types'
 
@@ -22,6 +23,9 @@ export type PoppinsSchema = RecordViteKeys<ValidateFn<any>>
 export type StandardSchema = RecordViteKeys<StandardSchemaV1>
 
 export type Schema = PoppinsSchema | StandardSchema
+
+export type ConfigOptions = Pick<UserConfig, 'envDir' | 'envPrefix' | 'root'> &
+  Pick<ConfigEnv, 'mode'>
 
 /**
  * Infer the schema type from the plugin options
