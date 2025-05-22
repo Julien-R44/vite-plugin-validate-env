@@ -181,6 +181,31 @@ export const env: ImportMetaEnvAugmented = import.meta.env;
 
 By using `env` instead of `import.meta.env` in your code, TypeScript will now throw an error if you try to access an unknown variable.
 
+## Validation without Vite
+
+If you want to load and validate your environment variables the same way the plugin would do it, but without actually running Vite, you can use the additionally exposed `loadAndValidateEnv` function:
+
+```ts
+import { loadAndValidateEnv } from '@julr/vite-plugin-validate-env';
+
+const env = await loadAndValidateEnv(
+  { // Simulated Vite configuration
+    mode: 'development', // required
+    root: process.cwd(), // optional
+    envDir: process.cwd(), // optional
+    envPrefix: 'VITE_', // optional
+  },
+  { // Plugin options
+    validator: 'builtin',
+    schema: {
+      VITE_MY_VAR: Schema.string()
+    },
+  },
+);
+
+Object.assign(process.env, env);
+```
+
 ## 💖 Sponsors
 
 If you find this useful, consider [sponsoring me](https://github.com/sponsors/Julien-R44)! It helps support and maintain the project 🙏
