@@ -1,12 +1,12 @@
 import path from 'node:path'
 import { cwd } from 'node:process'
+import { type Plugin } from 'vite'
 import { createConfigLoader as createLoader } from 'unconfig'
-import { type ConfigEnv, type Plugin, type UserConfig } from 'vite'
 
 import { initUi, type UI } from './ui.js'
 import { builtinValidation } from './validators/builtin/index.js'
 import { standardValidation } from './validators/standard/index.js'
-import type { FullPluginOptions, PluginOptions, Schema } from './types.js'
+import type { ConfigOptions, FullPluginOptions, PluginOptions, Schema } from './types.js'
 
 /**
  * Load schema defined in `env.ts` file using unconfig
@@ -71,42 +71,27 @@ function shouldLogVariables(options: PluginOptions) {
 /**
  * Main function. Will call each validator defined in the schema and throw an error if any of them fails.
  */
-async function validateEnv(
-  ui: UI,
-  userConfig: UserConfig,
-  envConfig: ConfigEnv,
-  inlineOptions?: PluginOptions,
-) {
+async function validateEnv(ui: UI, config: ConfigOptions, inlineOptions?: PluginOptions) {
   /**
    * Dynamic import of Vite helpers to using the ESM build of Vite and
    * avoiding CJS since it will be deprecated
    * See : https://vitejs.dev/guide/troubleshooting.html#vite-cjs-node-api-deprecated
    */
   const { normalizePath, loadEnv } = await import('vite')
-  const rootDir = userConfig.root || cwd()
+  const rootDir = config.root || cwd()
 
-  const resolvedRoot = normalizePath(
-    userConfig.root ? path.resolve(userConfig.root) : process.cwd(),
-  )
+  const resolvedRoot = normalizePath(config.root ? path.resolve(config.root) : process.cwd())
 
-  const envDir = userConfig.envDir
-    ? normalizePath(path.resolve(resolvedRoot, userConfig.envDir))
+  const envDir = config.envDir
+    ? normalizePath(path.resolve(resolvedRoot, config.envDir))
     : resolvedRoot
 
-  const env = loadEnv(envConfig.mode, envDir, userConfig.envPrefix)
+  const env = loadEnv(config.mode, envDir, config.envPrefix)
 
   const options = await loadOptions(rootDir, inlineOptions)
   const variables = await validateAndLog(ui, env, options)
 
-  return {
-    define: variables.reduce(
-      (acc, { key, value }) => {
-        acc[`import.meta.env.${key}`] = JSON.stringify(value)
-        return acc
-      },
-      {} as Record<string, unknown>,
-    ),
-  }
+  return variables
 }
 
 async function validateAndLog(ui: UI, env: Record<string, string>, options: PluginOptions) {
@@ -139,8 +124,35 @@ export const ValidateEnv = (options?: PluginOptions): Plugin => {
     // @ts-expect-error - only used for testing as we need to keep each instance of the plugin unique to a test
     ui: process.env.NODE_ENV === 'testing' ? ui : undefined,
     name: 'vite-plugin-validate-env',
-    config: (config, env) => validateEnv(ui, config, env, options),
+    config: ({ envDir, envPrefix, root }, { mode }) =>
+      validateEnv(ui, { envDir, envPrefix, root, mode }, options).then((variables) => ({
+        define: variables.reduce(
+          (acc, { key, value }) => {
+            acc[`import.meta.env.${key}`] = JSON.stringify(value)
+            return acc
+          },
+          {} as Record<string, string>,
+        ),
+      })),
   }
+}
+
+/**
+ * Load environment variables using the provided Vite configuration
+ * and validate them against a schema the same way `ValidateEnv` does it
+ * @returns An object mapping environment variable names to validation results
+ */
+export const loadAndValidateEnv = (config: ConfigOptions, options?: PluginOptions) => {
+  const ui = initUi()
+  return validateEnv(ui, config, options).then((variables) =>
+    variables.reduce(
+      (acc, { key, value }) => {
+        acc[key] = value
+        return acc
+      },
+      {} as Record<string, any>,
+    ),
+  )
 }
 
 export const defineConfig = <T extends PluginOptions>(config: T): T => config

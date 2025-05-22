@@ -173,6 +173,33 @@ interface ImportMetaEnv extends ImportMetaEnvAugmented {
 }
 ```
 
+## Validation without Vite
+
+In some cases, you might want to validate environment variables outside of Vite and reuse the same schema. You can do so by using the `loadAndValidateEnv` function directly. This function will validate and also load the environment variables inside the `process.env` object.
+
+> ![WARNING]
+> `process.env` only accept string values, so don't be surprised if a `number` or `boolean` variable comes back as a string when accessing it after validation.
+
+```ts
+import { loadAndValidateEnv } from '@julr/vite-plugin-validate-env';
+
+const env = await loadAndValidateEnv(
+  {
+    mode: 'development', // required
+    root: import.meta.dirname, // optional
+  },
+  { 
+    // Plugin options. Also optional if you 
+    // are using a dedicated `env.ts` file
+    validator: 'builtin',
+    schema: { VITE_MY_VAR: Schema.string() },
+  },
+);
+
+console.log(env.VITE_MY_VAR);
+console.log(process.env.VITE_MY_VAR)
+```
+
 ## 💖 Sponsors
 
 If you find this useful, consider [sponsoring me](https://github.com/sponsors/Julien-R44)! It helps support and maintain the project 🙏
