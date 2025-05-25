@@ -52,6 +52,7 @@
   "dependencies": {
     "@poppinss/cliui": "^6.4.3",
     "@poppinss/validator-lite": "^2.1.0",
+    "@standard-schema/spec": "^1.0.0",
     "unconfig": "^7.3.2"
   },
   "devDependencies": {
@@ -59,7 +60,6 @@
     "@japa/file-system": "^2.3.2",
     "@japa/runner": "^4.2.0",
     "@julr/tooling-configs": "^4.0.0",
-    "@standard-schema/spec": "^1.0.0",
     "@types/node": "^22.15.19",
     "@vinejs/vine": "^3.0.1",
     "arktype": "^2.1.20",
