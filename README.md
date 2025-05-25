@@ -28,7 +28,7 @@ pnpm add -D @julr/vite-plugin-validate-env
 
 You can use the plugin with the [built-in validator](https://github.com/poppinss/validator-lite) for simple use cases, or with libraries like Zod for more advanced schemas.
 
-> [!TIP]  
+> [!TIP]
 > I would recommend using a dedicated `env.ts` file to keep your Vite config clean and separate from your environment variable definitions. See the [Using a Dedicated `env.ts` Config File](#using-a-dedicated-envts-config-file) section for more details.
 
 ### Built-in Validator
@@ -160,26 +160,17 @@ type ImportMetaEnvAugmented = import('@julr/vite-plugin-validate-env').ImportMet
   typeof import('../env').default
 >
 
+interface ViteTypeOptions {
+  // Avoid adding an index type to `ImportMetaDev` so
+  // there's an error when accessing unknown properties.
+  strictImportMetaEnv: unknown
+}
+
 interface ImportMetaEnv extends ImportMetaEnvAugmented {
   // Now import.meta.env is totally type-safe and based on your `env.ts` schema definition
   // You can also add custom variables that are not defined in your schema
 }
 ```
-
-## Forbid unknown variables
-
-Since we rely on module augmentation to type `import.meta.env`, using unknown variables won’t trigger errors because the `ImportMetaEnv` interface from Vite includes a `[key: string]: string` signature.
-
-To enforce stricter typing and prevent the use of unknown variables, you can set up the following:
-
-```ts
-// lib/env.ts or wherever you want
-import { ImportMetaEnvAugmented } from '@julr/vite-plugin-validate-env';
-
-export const env: ImportMetaEnvAugmented = import.meta.env;
-```
-
-By using `env` instead of `import.meta.env` in your code, TypeScript will now throw an error if you try to access an unknown variable.
 
 ## 💖 Sponsors
 
