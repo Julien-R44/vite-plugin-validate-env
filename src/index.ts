@@ -124,35 +124,30 @@ export const ValidateEnv = (options?: PluginOptions): Plugin => {
     // @ts-expect-error - only used for testing as we need to keep each instance of the plugin unique to a test
     ui: process.env.NODE_ENV === 'testing' ? ui : undefined,
     name: 'vite-plugin-validate-env',
-    config: ({ envDir, envPrefix, root }, { mode }) =>
-      validateEnv(ui, { envDir, envPrefix, root, mode }, options).then((variables) => ({
-        define: variables.reduce(
-          (acc, { key, value }) => {
-            acc[`import.meta.env.${key}`] = JSON.stringify(value)
-            return acc
-          },
-          {} as Record<string, string>,
-        ),
-      })),
+    config: async ({ envDir, envPrefix, root }, { mode }) => {
+      const env = await validateEnv(ui, { envDir, envPrefix, root, mode }, options)
+      const define = Object.fromEntries(
+        env.map(({ key, value }) => [`import.meta.env.${key}`, JSON.stringify(value)]),
+      )
+
+      return { define }
+    },
   }
 }
 
 /**
- * Load environment variables using the provided Vite configuration
- * and validate them against a schema the same way `ValidateEnv` does it
- * @returns An object mapping environment variable names to validation results
+ * Validate environment variables and load them inside `process.env`
+ * Can be useful when you want to validate outside of Vite's build process.
  */
-export const loadAndValidateEnv = (config: ConfigOptions, options?: PluginOptions) => {
+export const loadAndValidateEnv = async (config: ConfigOptions, options?: PluginOptions) => {
   const ui = initUi()
-  return validateEnv(ui, config, options).then((variables) =>
-    variables.reduce(
-      (acc, { key, value }) => {
-        acc[key] = value
-        return acc
-      },
-      {} as Record<string, any>,
-    ),
-  )
+  const variables = await validateEnv(ui, config, options)
+
+  for (const { key, value } of variables) {
+    process.env[key] = value
+  }
+
+  return Object.fromEntries(variables.map(({ key, value }) => [key, value]))
 }
 
 export const defineConfig = <T extends PluginOptions>(config: T): T => config

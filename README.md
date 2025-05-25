@@ -177,7 +177,7 @@ interface ImportMetaEnv extends ImportMetaEnvAugmented {
 
 In some cases, you might want to validate environment variables outside of Vite and reuse the same schema. You can do so by using the `loadAndValidateEnv` function directly. This function will validate and also load the environment variables inside the `process.env` object.
 
-> ![WARNING]
+> [!WARNING]
 > `process.env` only accept string values, so don't be surprised if a `number` or `boolean` variable comes back as a string when accessing it after validation.
 
 ```ts

@@ -1,6 +1,6 @@
 import { test } from '@japa/runner'
 
-import { Schema } from '../src/index.js'
+import { loadAndValidateEnv, Schema } from '../src/index.js'
 import { createEnvFile, executeValidateEnv, ValidateEnv } from './helpers.js'
 
 test.group('vite-plugin-validate-env', () => {
@@ -181,5 +181,35 @@ test.group('vite-plugin-validate-env', () => {
     )
 
     assert.isDefined(messages.find((message) => message.includes('cyan(VITE_TESTX): not boolean')))
+  })
+})
+
+test.group('vite-plugin-validate-env - node usage', () => {
+  test('Basic validation', async ({ assert, fs }) => {
+    await createEnvFile({ VITE_TEST: 'not boolean' })
+    const validate = async () =>
+      await loadAndValidateEnv(
+        { mode: 'development', root: fs.basePath },
+        { VITE_TEST: Schema.boolean() },
+      )
+
+    await assert.rejects(async () => {
+      await validate()
+    }, /"VITE_TEST" env variable must be a boolean \(Current value: "not boolean"\)/)
+
+    delete process.env.VITE_TEST
+  })
+
+  test('assign to process.env', async ({ assert, fs }) => {
+    await createEnvFile({ VITE_TEST: 'true' })
+    const result = await loadAndValidateEnv(
+      { mode: 'development', root: fs.basePath },
+      { VITE_TEST: Schema.boolean() },
+    )
+
+    assert.deepEqual(result, { VITE_TEST: true })
+    assert.equal(process.env.VITE_TEST, 'true')
+
+    delete process.env.VITE_TEST
   })
 })
