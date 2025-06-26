@@ -144,7 +144,10 @@ export default defineConfig({
 import { defineConfig, Schema } from '@julr/vite-plugin-validate-env'
 
 export default defineConfig({
-  VITE_MY_VAR: Schema.enum(['foo', 'bar'] as const),
+  validator: "builtin",
+  schema: {
+    VITE_MY_VAR: Schema.enum(['foo', 'bar'] as const),
+  },
 })
 ```
 
