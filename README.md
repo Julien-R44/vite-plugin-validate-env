@@ -151,7 +151,7 @@ export default defineConfig({
 ## Typing `import.meta.env`
 
 In order to have a type-safe `import.meta.env`, the ideal is to use the dedicated configuration file `env.ts`.
-Once this is done, you would only need to add an `env.d.ts` in `src/` folder to augment `ImportMetaEnv` (as [suggested here](https://vitejs.dev/guide/env-and-mode.html#env-files) ) with the following content:
+Once this is done, you would only need to add an `vite-env.d.ts` in `src/` folder to augment `ImportMetaEnv` (as [suggested here](https://vitejs.dev/guide/env-and-mode.html#env-files) ) with the following content:
 
 ```ts
 /// <reference types="vite/client" />
