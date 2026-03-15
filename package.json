@@ -2,7 +2,7 @@
   "name": "@julr/vite-plugin-validate-env",
   "type": "module",
   "version": "2.2.0",
-  "packageManager": "pnpm@10.12.4",
+  "packageManager": "pnpm@10.32.1",
   "description": "✅ Vite plugin for validating your environment variables",
   "author": "Julien Ripouteau <julien@ripouteau.com>",
   "license": "MIT",
@@ -41,38 +41,38 @@
     "prepublishOnly": "pnpm build",
     "release": "bumpp --commit --push --tag && pnpm publish",
     "dev:playground": "pnpm vite -c playground/vite.config.ts",
-    "quick:test": "node --enable-source-maps --loader ts-node/esm bin/test.ts",
-    "test": "node --enable-source-maps --loader ts-node/esm bin/test.ts",
+    "quick:test": "tsx bin/test.ts",
+    "test": "tsx bin/test.ts",
     "typecheck": "tsc --noEmit",
     "checks": "pnpm lint && pnpm typecheck"
   },
   "peerDependencies": {
-    "vite": "^2.9.0 || ^3.0.0-0 || ^4.0.0 || ^5.0.0 || ^6.0.0 || ^7.0.0"
+    "vite": "^2.9.0 || ^3.0.0-0 || ^4.0.0 || ^5.0.0 || ^6.0.0 || ^7.0.0 || ^8.0.0"
   },
   "dependencies": {
-    "@poppinss/cliui": "^6.4.3",
-    "@poppinss/validator-lite": "^2.1.0",
-    "@standard-schema/spec": "^1.0.0",
-    "unconfig": "^7.3.2"
+    "@poppinss/cliui": "^6.7.0",
+    "@poppinss/validator-lite": "^2.1.2",
+    "@standard-schema/spec": "^1.1.0",
+    "unconfig": "7.3.3"
   },
   "devDependencies": {
-    "@japa/assert": "^4.0.1",
-    "@japa/file-system": "^2.3.2",
-    "@japa/runner": "^4.2.0",
-    "@julr/tooling-configs": "^4.0.0",
-    "@types/node": "^24.0.10",
-    "@vinejs/vine": "^3.0.1",
-    "arktype": "^2.1.20",
-    "bumpp": "^10.2.0",
-    "cross-env": "^7.0.3",
-    "eslint": "^9.30.1",
-    "prettier": "^3.6.2",
-    "ts-node": "^10.9.2",
-    "tsup": "^8.5.0",
-    "typescript": "^5.8.3",
-    "valibot": "^1.1.0",
-    "vite": "^7.0.1",
-    "zod": "^3.25.71"
+    "@japa/assert": "^4.2.0",
+    "@japa/file-system": "^3.0.0",
+    "@japa/runner": "^5.3.0",
+    "@julr/tooling-configs": "^6.0.0",
+    "@types/node": "^24.12.0",
+    "@vinejs/vine": "^4.3.0",
+    "arktype": "^2.2.0",
+    "bumpp": "^10.4.1",
+    "cross-env": "^10.1.0",
+    "eslint": "^9.39.4",
+    "prettier": "^3.8.1",
+    "tsup": "^8.5.1",
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.3",
+    "valibot": "^1.2.0",
+    "vite": "^8.0.0",
+    "zod": "^3.25.76"
   },
   "prettier": "@julr/tooling-configs/prettier"
 }
