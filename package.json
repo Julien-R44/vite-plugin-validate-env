@@ -34,8 +34,8 @@
     "node": ">=22"
   },
   "scripts": {
-    "build": "tsup",
-    "dev": "tsup",
+    "build": "tsdown",
+    "dev": "tsdown",
     "lint:check": "oxlint",
     "format:check": "oxfmt --check .",
     "lint": "oxlint --fix",
@@ -69,7 +69,7 @@
     "cross-env": "^10.1.0",
     "oxfmt": "^0.40.0",
     "oxlint": "^1.55.0",
-    "tsup": "^8.5.1",
+    "tsdown": "^0.21.3",
     "tsx": "^4.21.0",
     "typescript": "^5.9.3",
     "valibot": "^1.2.0",
