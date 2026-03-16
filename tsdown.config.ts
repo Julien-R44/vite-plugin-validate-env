@@ -6,8 +6,10 @@ export default defineConfig({
   clean: true,
   sourcemap: true,
   format: ['esm'],
+  fixedExtension: false,
+  publint: true,
   deps: {
-    neverBundle: ['vite'],
+    neverBundle: ['vite', 'zod'],
   },
   target: false,
 })
