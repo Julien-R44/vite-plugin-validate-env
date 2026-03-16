@@ -1,6 +1,6 @@
 {
   "name": "@julr/vite-plugin-validate-env",
-  "version": "2.2.1",
+  "version": "2.2.2",
   "description": "✅ Vite plugin for validating your environment variables",
   "keywords": [
     "env",
