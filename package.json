@@ -27,7 +27,8 @@
   "type": "module",
   "main": "./dist/index.js",
   "publishConfig": {
-    "access": "public"
+    "access": "public",
+    "provenance": true
   },
   "scripts": {
     "build": "tsdown",
@@ -37,7 +38,7 @@
     "lint": "oxlint --fix",
     "format": "oxfmt --write .",
     "prepublishOnly": "pnpm build",
-    "release": "bumpp --commit --push --tag && pnpm publish",
+    "release": "pnpm build && release-it --ci",
     "dev:playground": "pnpm vite -c playground/vite.config.ts",
     "quick:test": "node bin/test.ts",
     "test": "node bin/test.ts",
@@ -55,13 +56,14 @@
     "@japa/file-system": "^3.0.0",
     "@japa/runner": "^5.3.0",
     "@julr/tooling-configs": "^6.1.0",
+    "@release-it/conventional-changelog": "^10.0.6",
     "@types/node": "^24.12.0",
     "@vinejs/vine": "^4.3.0",
     "arktype": "^2.2.0",
-    "bumpp": "^10.4.1",
     "cross-env": "^10.1.0",
     "oxfmt": "^0.40.0",
     "oxlint": "^1.55.0",
+    "release-it": "^19.2.4",
     "tsdown": "^0.21.3",
     "typescript": "^5.9.3",
     "valibot": "^1.2.0",
@@ -74,5 +76,29 @@
   "engines": {
     "node": ">=22"
   },
-  "packageManager": "pnpm@10.32.1"
+  "packageManager": "pnpm@10.32.1",
+  "release-it": {
+    "git": {
+      "requireCleanWorkingDir": true,
+      "requireUpstream": true,
+      "commitMessage": "chore(release): ${version}",
+      "tagAnnotation": "v${version}",
+      "push": true,
+      "tagName": "v${version}"
+    },
+    "github": {
+      "release": true
+    },
+    "npm": {
+      "publish": true,
+      "skipChecks": true
+    },
+    "plugins": {
+      "@release-it/conventional-changelog": {
+        "preset": {
+          "name": "angular"
+        }
+      }
+    }
+  }
 }
