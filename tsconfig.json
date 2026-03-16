@@ -1,8 +1,4 @@
 {
-  "ts-node": {
-    "transpileOnly": true
-  },
-
   "compilerOptions": {
     "target": "es2020",
     "lib": ["esnext"],
@@ -15,6 +11,8 @@
     "noUnusedParameters": true,
     "esModuleInterop": true,
     "skipDefaultLibCheck": true,
+    "rewriteRelativeImportExtensions": true,
+    "allowImportingTsExtensions": true,
     "skipLibCheck": true
   }
 }

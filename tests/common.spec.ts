@@ -1,7 +1,7 @@
 import { test } from '@japa/runner'
 
-import { loadAndValidateEnv, Schema } from '../src/index.js'
-import { createEnvFile, executeValidateEnv, ValidateEnv } from './helpers.js'
+import { loadAndValidateEnv, Schema } from '../src/index.ts'
+import { createEnvFile, executeValidateEnv, ValidateEnv } from './helpers.ts'
 
 test.group('vite-plugin-validate-env', () => {
   test('Basic validation', async ({ assert }) => {

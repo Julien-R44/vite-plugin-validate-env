@@ -3,10 +3,10 @@ import { cwd } from 'node:process'
 import { type Plugin } from 'vite'
 import { createConfigLoader as createLoader } from 'unconfig'
 
-import { initUi, type UI } from './ui.js'
-import { builtinValidation } from './validators/builtin/index.js'
-import { standardValidation } from './validators/standard/index.js'
-import type { ConfigOptions, FullPluginOptions, PluginOptions, Schema } from './types.js'
+import { initUi, type UI } from './ui.ts'
+import { builtinValidation } from './validators/builtin/index.ts'
+import { standardValidation } from './validators/standard/index.ts'
+import type { ConfigOptions, FullPluginOptions, PluginOptions, Schema } from './types.ts'
 
 /**
  * Load schema defined in `env.ts` file using unconfig
@@ -153,4 +153,4 @@ export const loadAndValidateEnv = async (config: ConfigOptions, options?: Plugin
 export const defineConfig = <T extends PluginOptions>(config: T): T => config
 
 export { schema as Schema } from '@poppinss/validator-lite'
-export type { ImportMetaEnvAugmented } from './types.js'
+export type { ImportMetaEnvAugmented } from './types.ts'

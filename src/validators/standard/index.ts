@@ -1,5 +1,5 @@
-import type { UI } from '../../ui.js'
-import type { StandardSchema } from '../../types.js'
+import type { UI } from '../../ui.ts'
+import type { StandardSchema } from '../../types.ts'
 
 export function errorReporter(ui: UI, errors: any[]) {
   let finalMessage = ui.colors.red('Failed to validate environment variables : \n')

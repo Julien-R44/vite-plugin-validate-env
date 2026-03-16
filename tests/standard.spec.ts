@@ -3,7 +3,7 @@ import * as v from 'valibot'
 import { type } from 'arktype'
 import { test } from '@japa/runner'
 
-import { createEnvFile, executeValidateEnv, ValidateEnv } from './helpers.js'
+import { createEnvFile, executeValidateEnv, ValidateEnv } from './helpers.ts'
 
 test.group('Standard validation adapter | Zod', () => {
   test('basic', async ({ assert }) => {

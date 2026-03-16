@@ -7,7 +7,7 @@ import { z } from 'zod/v4'
 import { defineConfig } from 'vite'
 
 // @ts-ignore
-import { Schema, ValidateEnv } from '../src/index.js'
+import { Schema, ValidateEnv } from '../src/index.ts'
 
 export default defineConfig({
   root: import.meta.dirname,

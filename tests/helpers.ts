@@ -1,8 +1,8 @@
 import { getActiveTest } from '@japa/runner'
 import type { Plugin, UserConfig } from 'vite'
 
-import type { UI } from '../src/ui.js'
-import { ValidateEnv as CoreTypedValidateEnv } from '../src/index.js'
+import type { UI } from '../src/ui.ts'
+import { ValidateEnv as CoreTypedValidateEnv } from '../src/index.ts'
 
 export async function createEnvFile(env: Record<string, string>, envFilename = '.env.development') {
   const test = getActiveTest()

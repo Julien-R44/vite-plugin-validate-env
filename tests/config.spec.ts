@@ -1,7 +1,7 @@
 import { test } from '@japa/runner'
 
-import { Schema } from '../src/index.js'
-import { createEnvFile, executeValidateEnv, ValidateEnv } from './helpers.js'
+import { Schema } from '../src/index.ts'
+import { createEnvFile, executeValidateEnv, ValidateEnv } from './helpers.ts'
 
 test.group('Config loading', () => {
   test('Dedicated config file', async ({ fs }) => {
