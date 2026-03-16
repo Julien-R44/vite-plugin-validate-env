@@ -36,15 +36,17 @@
   "scripts": {
     "build": "tsup",
     "dev": "tsup",
-    "lint": "eslint .",
-    "format": "prettier --write .",
+    "lint:check": "oxlint",
+    "format:check": "oxfmt --check .",
+    "lint": "oxlint --fix",
+    "format": "oxfmt --write .",
     "prepublishOnly": "pnpm build",
     "release": "bumpp --commit --push --tag && pnpm publish",
     "dev:playground": "pnpm vite -c playground/vite.config.ts",
     "quick:test": "tsx bin/test.ts",
     "test": "tsx bin/test.ts",
     "typecheck": "tsc --noEmit",
-    "checks": "pnpm lint && pnpm typecheck"
+    "checks": "pnpm lint:check && pnpm format:check && pnpm typecheck"
   },
   "peerDependencies": {
     "vite": "^2.9.0 || ^3.0.0-0 || ^4.0.0 || ^5.0.0 || ^6.0.0 || ^7.0.0 || ^8.0.0"
@@ -59,20 +61,19 @@
     "@japa/assert": "^4.2.0",
     "@japa/file-system": "^3.0.0",
     "@japa/runner": "^5.3.0",
-    "@julr/tooling-configs": "^6.0.0",
+    "@julr/tooling-configs": "^6.1.0",
     "@types/node": "^24.12.0",
     "@vinejs/vine": "^4.3.0",
     "arktype": "^2.2.0",
     "bumpp": "^10.4.1",
     "cross-env": "^10.1.0",
-    "eslint": "^9.39.4",
-    "prettier": "^3.8.1",
+    "oxfmt": "^0.40.0",
+    "oxlint": "^1.55.0",
     "tsup": "^8.5.1",
     "tsx": "^4.21.0",
     "typescript": "^5.9.3",
     "valibot": "^1.2.0",
     "vite": "^8.0.0",
     "zod": "^3.25.76"
-  },
-  "prettier": "@julr/tooling-configs/prettier"
+  }
 }

@@ -1,0 +1,4 @@
+{
+  "oxc.typeAware": true,
+  "editor.defaultFormatter": "oxc.oxc-vscode"
+}

@@ -26,11 +26,11 @@ export default defineConfig({
       debug: false,
       schema: {
         VITE_STRING: z.string(),
-        VITE_NUMBER: z.preprocess((value) => Number(value), z.number()),
-        VITE_BOOLEAN: z.preprocess((value) => value === 'true' || value === '1', z.boolean()),
+        VITE_NUMBER: z.preprocess(value => Number(value), z.number()),
+        VITE_BOOLEAN: z.preprocess(value => value === 'true' || value === '1', z.boolean()),
 
         VITE_OBJECT: z.preprocess(
-          (value) => JSON.parse(value as string),
+          value => JSON.parse(value as string),
           z.object({
             a: z.string(),
             b: z.number(),

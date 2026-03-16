@@ -173,14 +173,14 @@ test.group('vite-plugin-validate-env', () => {
     )
 
     const logs = plugin.ui.logger.getLogs()
-    const messages = logs.map((log) => log.message)
+    const messages = logs.map(log => log.message)
     assert.isDefined(
       messages.find(
-        (message) => message === 'cyan([vite-plugin-validate-env]) debug process.env content',
+        message => message === 'cyan([vite-plugin-validate-env]) debug process.env content',
       ),
     )
 
-    assert.isDefined(messages.find((message) => message.includes('cyan(VITE_TESTX): not boolean')))
+    assert.isDefined(messages.find(message => message.includes('cyan(VITE_TESTX): not boolean')))
   })
 })
 

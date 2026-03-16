@@ -29,7 +29,7 @@ test.group('Standard validation adapter | Zod', () => {
         VITE_TEST: z
           .string()
           .max(10)
-          .transform((value) => value.toUpperCase()),
+          .transform(value => value.toUpperCase()),
       },
     })
 
@@ -56,7 +56,7 @@ test.group('Standard validation adapter | Zod', () => {
     const plugin = ValidateEnv({
       validator: 'standard',
       schema: {
-        VITE_REFINED: z.string().refine((value) => value.length <= 10, {
+        VITE_REFINED: z.string().refine(value => value.length <= 10, {
           message: 'Max 10 characters',
         }),
       },
@@ -129,7 +129,7 @@ test.group('Standard validation adapter | Zod', () => {
     await createEnvFile({ VITE_NUMBER: '4323' })
     const plugin = ValidateEnv({
       validator: 'standard',
-      schema: { VITE_NUMBER: z.preprocess((value) => Number(value), z.number()) },
+      schema: { VITE_NUMBER: z.preprocess(value => Number(value), z.number()) },
     })
 
     const { define } = await executeValidateEnv(plugin)
@@ -140,7 +140,7 @@ test.group('Standard validation adapter | Zod', () => {
     const plugin = ValidateEnv({
       validator: 'standard',
       schema: {
-        VITE_BOOLEAN: z.preprocess((value) => value === 'true' || value === '1', z.boolean()),
+        VITE_BOOLEAN: z.preprocess(value => value === 'true' || value === '1', z.boolean()),
       },
     })
 
@@ -157,7 +157,7 @@ test.group('Standard validation adapter | Zod', () => {
     const plugin = ValidateEnv({
       validator: 'standard',
       schema: {
-        VITE_BOOLEAN: z.preprocess((value) => value === 'true' || value === '1', z.boolean()),
+        VITE_BOOLEAN: z.preprocess(value => value === 'true' || value === '1', z.boolean()),
       },
       debug: true,
     })
@@ -203,14 +203,14 @@ test.group('Standard validation adapter | Zod', () => {
     )
 
     const logs = plugin.ui.logger.getLogs()
-    const messages = logs.map((log) => log.message)
+    const messages = logs.map(log => log.message)
     assert.isDefined(
       messages.find(
-        (message) => message === 'cyan([vite-plugin-validate-env]) debug process.env content',
+        message => message === 'cyan([vite-plugin-validate-env]) debug process.env content',
       ),
     )
 
-    assert.isDefined(messages.find((message) => message.includes('cyan(VITE_TESTX): not boolean')))
+    assert.isDefined(messages.find(message => message.includes('cyan(VITE_TESTX): not boolean')))
   })
 })
 
