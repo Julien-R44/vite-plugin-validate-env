@@ -209,7 +209,7 @@ If you find this useful, consider [sponsoring me](https://github.com/sponsors/Ju
 
 <p align="center">
   <img src="https://github.com/julien-r44/static/blob/main/sponsorkit/sponsors.png?raw=true">
-</p>
+</p> 
 
 ---
 
