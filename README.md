@@ -10,11 +10,11 @@ A Vite plugin that validates your environment variables at **build** or **dev ti
 
 ## ✅ Features
 
-* Validate environment variables **at build time only**, zero runtime overhead
-* Fully **type-safe**
-* Supports [standard-schema](https://github.com/standard-schema/standard-schema) — works with Zod, Valibot, ArkType, and more
-* Built-in parsing, validation, and transformation
-* Custom rules and error messages
+- Validate environment variables **at build time only**, zero runtime overhead
+- Fully **type-safe**
+- Supports [standard-schema](https://github.com/standard-schema/standard-schema) — works with Zod, Valibot, ArkType, and more
+- Built-in parsing, validation, and transformation
+- Custom rules and error messages
 
 ---
 
@@ -43,8 +43,8 @@ export default defineConfig({
     ValidateEnv({
       validator: 'builtin',
       schema: {
-        VITE_MY_VAR: Schema.string()
-      }
+        VITE_MY_VAR: Schema.string(),
+      },
     }),
   ],
 })
@@ -64,8 +64,8 @@ export default defineConfig({
     ValidateEnv({
       validator: 'standard', // 👈
       schema: {
-        VITE_MY_VAR: z.string()
-      }
+        VITE_MY_VAR: z.string(),
+      },
     }),
   ],
 })
@@ -93,9 +93,7 @@ ValidateEnv({
   VITE_URL_SUFFIXED_WITH_SLASH: (key, value) => {
     if (!value) throw new Error(`Missing ${key}`)
 
-    return value.endsWith('/')
-      ? value
-      : `${value}/`
+    return value.endsWith('/') ? value : `${value}/`
   },
 })
 ```
@@ -132,10 +130,12 @@ import { defineConfig } from 'vite'
 import { ValidateEnv } from '@julr/vite-plugin-validate-env'
 
 export default defineConfig({
-  plugins: [ValidateEnv({
-    // Optional: you can specify a custom path for the config file
-    configFile: 'config/env'
-  })],
+  plugins: [
+    ValidateEnv({
+      // Optional: you can specify a custom path for the config file
+      configFile: 'config/env',
+    }),
+  ],
 })
 ```
 
@@ -144,7 +144,7 @@ export default defineConfig({
 import { defineConfig, Schema } from '@julr/vite-plugin-validate-env'
 
 export default defineConfig({
-  validator: "builtin",
+  validator: 'builtin',
   schema: {
     VITE_MY_VAR: Schema.enum(['foo', 'bar'] as const),
   },
@@ -184,22 +184,22 @@ In some cases, you might want to validate environment variables outside of Vite 
 > `process.env` only accept string values, so don't be surprised if a `number` or `boolean` variable comes back as a string when accessing it after validation.
 
 ```ts
-import { loadAndValidateEnv } from '@julr/vite-plugin-validate-env';
+import { loadAndValidateEnv } from '@julr/vite-plugin-validate-env'
 
 const env = await loadAndValidateEnv(
   {
     mode: 'development', // required
     root: import.meta.dirname, // optional
   },
-  { 
-    // Plugin options. Also optional if you 
+  {
+    // Plugin options. Also optional if you
     // are using a dedicated `env.ts` file
     validator: 'builtin',
     schema: { VITE_MY_VAR: Schema.string() },
   },
-);
+)
 
-console.log(env.VITE_MY_VAR);
+console.log(env.VITE_MY_VAR)
 console.log(process.env.VITE_MY_VAR)
 ```
 

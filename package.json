@@ -1,37 +1,33 @@
 {
   "name": "@julr/vite-plugin-validate-env",
-  "type": "module",
   "version": "2.2.0",
-  "packageManager": "pnpm@10.32.1",
   "description": "✅ Vite plugin for validating your environment variables",
-  "author": "Julien Ripouteau <julien@ripouteau.com>",
-  "license": "MIT",
-  "funding": "https://github.com/sponsors/Julien-R44",
+  "keywords": [
+    "env",
+    "env-var",
+    "validation",
+    "vite",
+    "vite-plugin",
+    "zod"
+  ],
   "homepage": "https://github.com/Julien-R44/vite-plugin-validate-env#readme",
+  "bugs": {
+    "url": "https://github.com/Julien-R44/vite-plugin-validate-env/issues"
+  },
+  "license": "MIT",
+  "author": "Julien Ripouteau <julien@ripouteau.com>",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Julien-R44/vite-plugin-validate-env.git"
   },
-  "bugs": {
-    "url": "https://github.com/Julien-R44/vite-plugin-validate-env/issues"
-  },
-  "keywords": [
-    "vite",
-    "vite-plugin",
-    "env-var",
-    "validation",
-    "zod",
-    "env"
-  ],
-  "publishConfig": {
-    "access": "public"
-  },
-  "main": "./dist/index.js",
+  "funding": "https://github.com/sponsors/Julien-R44",
   "files": [
     "dist"
   ],
-  "engines": {
-    "node": ">=22"
+  "type": "module",
+  "main": "./dist/index.js",
+  "publishConfig": {
+    "access": "public"
   },
   "scripts": {
     "build": "tsdown",
@@ -47,9 +43,6 @@
     "test": "tsx bin/test.ts",
     "typecheck": "tsc --noEmit",
     "checks": "pnpm lint:check && pnpm format:check && pnpm typecheck"
-  },
-  "peerDependencies": {
-    "vite": "^2.9.0 || ^3.0.0-0 || ^4.0.0 || ^5.0.0 || ^6.0.0 || ^7.0.0 || ^8.0.0"
   },
   "dependencies": {
     "@poppinss/cliui": "^6.7.0",
@@ -75,5 +68,12 @@
     "valibot": "^1.2.0",
     "vite": "^8.0.0",
     "zod": "^3.25.76"
-  }
+  },
+  "peerDependencies": {
+    "vite": "^2.9.0 || ^3.0.0-0 || ^4.0.0 || ^5.0.0 || ^6.0.0 || ^7.0.0 || ^8.0.0"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "packageManager": "pnpm@10.32.1"
 }
